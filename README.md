@@ -11,7 +11,7 @@
 
 <p align="center">
   <a href="https://github.com/Chihiro-bit/ChihiroSkip/releases/latest">
-    <img src="https://img.shields.io/github/v/release/Chihiro-bit/ChihiroSkip?label=下载最新版&style=for-the-badge&color=6C63FF" alt="Latest Release"/>
+    <img src="https://img.shields.io/github/v/release/Chihiro-bit/ChihiroSkip?include_prereleases&label=下载最新版&style=for-the-badge&color=6C63FF" alt="Latest Release"/>
   </a>
   <img src="https://img.shields.io/badge/Android-7.0%2B-green?style=for-the-badge&logo=android" alt="Android 7.0+"/>
   <img src="https://img.shields.io/badge/语言-Kotlin-blueviolet?style=for-the-badge&logo=kotlin" alt="Kotlin"/>
