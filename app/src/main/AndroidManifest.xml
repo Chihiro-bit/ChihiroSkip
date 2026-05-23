@@ -4,6 +4,7 @@
     tools:ignore="ProtectedPermissions" >
 
     <uses-permission android:name="android.permission.BIND_ACCESSIBILITY_SERVICE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
         android:allowBackup="true"
@@ -22,10 +23,29 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ui.RuleListActivity"
+            android:exported="false"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".ui.SkipLogActivity"
+            android:exported="false"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".ui.RulePreviewActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.RuleListActivity"
+            android:launchMode="singleTop" />
+
+        <service
+            android:name=".service.FloatingRecorderService"
+            android:exported="false" />
 <!--        <service-->
 <!--            android:name=".service.AccessibilityService"-->
 <!--            android:enabled="true"-->

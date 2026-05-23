@@ -2,12 +2,40 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-<!--    绿色-->
     <color name="green">#FF32A060</color>
     <color name="orange">#FFA500</color>
-<!--    透明 -->
     <color name="trabsparent">#00000000</color>
     <color name="purple_700">#9B1FE8</color>
     <color name="teal_200">#007C7C</color>
     <color name="colorPrimaryDark">#303F9F</color>
+
+    <!-- 品牌色 -->
+    <color name="colorPrimary">#FF6C63FF</color>
+    <color name="colorAccent">#FF00D1FF</color>
+    <color name="colorSuccess">#FF34C759</color>
+    <color name="colorWarning">#FFFFB020</color>
+    <color name="colorDanger">#FFFF4D4F</color>
+
+    <!-- 深色背景 -->
+    <color name="colorBgDark">#FF12141F</color>
+    <color name="colorCardDark">#FF1E2235</color>
+    <color name="colorSurface">#FF1A1D2E</color>
+
+    <!-- 文字 -->
+    <color name="colorTextPrimary">#FFF5F7FA</color>
+    <color name="colorTextSecondary">#FF9BA3BF</color>
+
+    <!-- 设置面板（浅色，保持现有面板兼容）-->
+    <color name="card_background">#FFFFFFFF</color>
+    <color name="section_header">#FF757575</color>
+    <color name="text_primary">#FF212121</color>
+    <color name="text_secondary">#FF757575</color>
+    <color name="divider">#FFE0E0E0</color>
+    <color name="panel_background">#FFF5F5F5</color>
+    <color name="danger_red">#FFF44336</color>
+
+    <!-- 状态指示 -->
+    <color name="status_on">#FF34C759</color>
+    <color name="status_off">#FFB0B0B0</color>
+    <color name="status_warning">#FFFFB020</color>
 </resources>

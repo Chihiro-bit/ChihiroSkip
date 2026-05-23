@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="260dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_floating_recorder"
+    android:elevation="8dp">
+
+    <!-- 拖拽把手 -->
+    <LinearLayout
+        android:id="@+id/drag_handle"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="12dp"
+        android:background="#CC1A1D2E">
+
+        <View
+            android:layout_width="32dp"
+            android:layout_height="4dp"
+            android:layout_marginEnd="8dp"
+            android:background="#806C63FF"
+            android:backgroundTint="#806C63FF" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="规则录制"
+            android:textColor="#F5F7FA"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/btn_recorder_close"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:gravity="center"
+            android:text="×"
+            android:textColor="#9BA3BF"
+            android:textSize="18sp"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true" />
+    </LinearLayout>
+
+    <!-- 状态和包名 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="12dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="4dp"
+        android:background="#CC12141F">
+
+        <TextView
+            android:id="@+id/tv_recorder_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="就绪"
+            android:textColor="#00D1FF"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tv_recorder_package"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="-"
+            android:textColor="#9BA3BF"
+            android:textSize="11sp"
+            android:ellipsize="end"
+            android:singleLine="true" />
+    </LinearLayout>
+
+    <!-- 扫描按钮 -->
+    <TextView
+        android:id="@+id/btn_recorder_scan"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:gravity="center"
+        android:text="扫描页面"
+        android:textColor="#FFFFFF"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        android:background="#FF6C63FF"
+        android:foreground="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true" />
+
+    <!-- 候选列表 -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_candidates"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxHeight="280dp"
+        android:background="#CC12141F"
+        android:nestedScrollingEnabled="false" />
+
+</LinearLayout>

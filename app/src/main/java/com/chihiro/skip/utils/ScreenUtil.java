@@ -12,7 +12,21 @@ import android.util.DisplayMetrics;
 public class ScreenUtil {
 
     /**
-     * 获取屏幕内容高度
+     * 获取屏幕宽度（px）
+     */
+    public static int getScreenWidth(Context context) {
+        return context.getResources().getDisplayMetrics().widthPixels;
+    }
+
+    /**
+     * 获取屏幕高度（px），供非 Activity 场景使用
+     */
+    public static int getScreenHeight(Context context) {
+        return context.getResources().getDisplayMetrics().heightPixels;
+    }
+
+    /**
+     * 获取屏幕内容高度（减去状态栏）
      * @param activity
      * @return
      */

@@ -1,113 +1,135 @@
 package com.chihiro.skip.service
 
-import android.accessibilityservice.AccessibilityService
-import android.accessibilityservice.GestureDescription
-import android.graphics.Path
-import android.graphics.Rect
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
-import android.widget.Toast
 import com.chihiro.skip.accessibility.AnalyzeSourceResult
 import com.chihiro.skip.accessibility.EventWrapper
 import com.chihiro.skip.accessibility.FastAccessibilityService
-import com.chihiro.skip.accessibility.notificationBar
-import com.chihiro.skip.manager.AnalyticsManager
+import com.chihiro.skip.engine.CandidateNodeScanner
+import com.chihiro.skip.engine.ClickExecutor
+import com.chihiro.skip.engine.NodeMatcher
+import com.chihiro.skip.engine.RuleEngine
+import com.chihiro.skip.engine.RuleRecorderManager
+import com.chihiro.skip.engine.SafetyGuard
+import com.chihiro.skip.repository.RuleRepository
+import com.chihiro.skip.repository.SettingsRepository
+import com.chihiro.skip.repository.SkipLogRepository
 import com.chihiro.skip.skipInterface.ParameterCheckInterface
+import com.chihiro.skip.utils.ScreenUtil
 
-/**
- * Author: CoderPig
- * Date: 2023-03-24
- * Desc:
- */
 class MyAccessibilityService : FastAccessibilityService(), ParameterCheckInterface {
+
     companion object {
-        private var instance: MyAccessibilityService? = null
+        private const val TAG = "ChihiroService"
 
-        fun getInstance(): MyAccessibilityService {
-            if (instance == null) {
-                instance = MyAccessibilityService()
-            }
-            return instance!!
-        }
-
-        private const val TAG = "CpFastAccessibility--->"
+        @Volatile
+        var liveInstance: MyAccessibilityService? = null
+            private set
     }
 
-    private val path = Path()
-    private val rect = Rect()
-    private var executeHandleRootNode = false
     override val enableListenApp = true
 
+    private lateinit var settingsRepo: SettingsRepository
+    private lateinit var ruleEngine: RuleEngine
+    private lateinit var recorderManager: RuleRecorderManager
+    private lateinit var candidateScanner: CandidateNodeScanner
+
+    private var lastPackage = ""
+
+    override fun onServiceConnected() {
+        super.onServiceConnected()
+        liveInstance = this
+        initEngine()
+        Log.i(TAG, "Service connected, interceptEnabled=${settingsRepo.interceptEnabled}")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        liveInstance = null
+        Log.i(TAG, "Service destroyed")
+    }
+
+    private fun initEngine() {
+        settingsRepo = SettingsRepository.getInstance(this)
+        val ruleRepo = RuleRepository.getInstance(this)
+        val logRepo = SkipLogRepository.getInstance(this)
+        val safetyGuard = SafetyGuard(this, settingsRepo)
+        val nodeMatcher = NodeMatcher()
+        val clickExecutor = ClickExecutor(this)
+        ruleEngine = RuleEngine(
+            context = this,
+            settingsRepo = settingsRepo,
+            ruleRepo = ruleRepo,
+            logRepo = logRepo,
+            safetyGuard = safetyGuard,
+            nodeMatcher = nodeMatcher,
+            clickExecutor = clickExecutor
+        )
+        recorderManager = RuleRecorderManager.getInstance(this)
+        candidateScanner = CandidateNodeScanner()
+    }
+
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
-        Log.d(TAG, "executeHandleRootNode: $executeHandleRootNode")
-        if(executeHandleRootNode){
+        if (!::settingsRepo.isInitialized) return
+        if (!settingsRepo.interceptEnabled && !recorderManager.isRecording) return
+
+        val root = try { rootInActiveWindow } catch (_: Exception) { return } ?: return
+        val pkg = root.packageName?.toString() ?: return
+        if (pkg == "com.chihiro.skip") return
+
+        // Track foreground changes for startupWindowMs
+        if (pkg != lastPackage) {
+            ruleEngine.onAppForegrounded(pkg)
+            lastPackage = pkg
+        }
+
+        val sw = ScreenUtil.getScreenWidth(this)
+        val sh = ScreenUtil.getScreenHeight(this)
+        val windows = try { windows?.toList() } catch (_: Exception) { null }
+
+        executor.execute {
             try {
-                if (!AnalyticsManager.isPerformScan(getCurrentRootNode().packageName.toString())) return
-
-                val skipNodes = handleRootNodeByPackageName()
-                if (skipNodes.isNotEmpty()) {
-                    skipNodes[0].getBoundsInScreen(rect)
-                    click(this, rect.exactCenterX(), rect.exactCenterY())
+                if (settingsRepo.interceptEnabled) {
+                    ruleEngine.process(root, pkg, sw, sh, windows)
                 }
-
-                AnalyticsManager.increaseScanCount()
             } catch (e: Exception) {
-                println(e)
+                Log.e(TAG, "Error in ruleEngine.process", e)
             }
         }
     }
 
-    override fun analyzeCallBack(wrapper: EventWrapper?, result: AnalyzeSourceResult) {
-        Log.d(TAG, "analyzeCallBack: $result")
-    }
+    fun requestScan() {
+        val root = try { rootInActiveWindow } catch (_: Exception) { null } ?: return
+        val pkg = root.packageName?.toString() ?: return
+        val activity = try {
+            windows?.firstOrNull { it.isActive }?.root?.packageName?.toString() ?: pkg
+        } catch (_: Exception) { pkg }
+        val sw = ScreenUtil.getScreenWidth(this)
+        val sh = ScreenUtil.getScreenHeight(this)
 
-
-
-    override fun handleRootNodeByPackageName(): MutableList<AccessibilityNodeInfo> {
-        return when (getCurrentRootNode().packageName.toString()) {
-            "com.qiyi.video.lite", "com.qiyi.video" -> getCurrentRootNode().findAccessibilityNodeInfosByText("关闭")
-            else -> getCurrentRootNode().findAccessibilityNodeInfosByText("跳过")
+        executor.execute {
+            try {
+                val candidates = candidateScanner.scan(root, sw, sh)
+                recorderManager.updateCandidates(candidates)
+                FloatingRecorderService.liveInstance?.onCandidatesReady(pkg, activity)
+            } catch (e: Exception) {
+                Log.e(TAG, "requestScan error", e)
+            }
         }
     }
 
-    @Synchronized
+    override fun analyzeCallBack(wrapper: EventWrapper?, result: AnalyzeSourceResult) {}
+
+    override fun handleRootNodeByPackageName(): MutableList<AccessibilityNodeInfo> = mutableListOf()
+
     override fun setExecuteHandleRootNode(value: Boolean) {
-        executeHandleRootNode = value
-        Log.d(TAG, "setExecuteHandleRootNode: $executeHandleRootNode")
-        Log.d(TAG, "value: $value")
-    }
-    @Synchronized
-    fun getExecuteHandleRootNode(): Boolean {
-        return executeHandleRootNode
+        if (::settingsRepo.isInitialized) {
+            settingsRepo.interceptEnabled = value
+            Log.i(TAG, "interceptEnabled set to $value")
+        }
     }
 
-    private fun getCurrentRootNode(): AccessibilityNodeInfo {
-        val rootNode = rootInActiveWindow
-        if (rootNode != null) return rootNode
-        else throw IllegalStateException("No valid root node available");
-    }
-    private fun click(accessibilityService: AccessibilityService, x: Float, y: Float) {
-        path.reset()
-        path.moveTo(x, y)
-        path.lineTo(x, y)
-
-        val builder = GestureDescription.Builder()
-        builder.addStroke(GestureDescription.StrokeDescription(path, 0, 1))
-        val gesture = builder.build()
-
-        accessibilityService.dispatchGesture(
-            gesture,
-            object : GestureResultCallback() {
-                override fun onCompleted(gestureDescription: GestureDescription) {
-                    super.onCompleted(gestureDescription)
-
-                    Toast.makeText(accessibilityService, "已为您跳过广告", Toast.LENGTH_SHORT).show()
-                    AnalyticsManager.setShowToastCount()
-
-                }
-            },
-            null
-        )
-    }
+    fun getInterceptEnabled(): Boolean =
+        if (::settingsRepo.isInitialized) settingsRepo.interceptEnabled else false
 }
