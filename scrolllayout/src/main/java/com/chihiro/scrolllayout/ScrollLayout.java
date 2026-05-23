@@ -28,6 +28,7 @@ import android.util.DisplayMetrics;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.AbsListView;
 import android.widget.FrameLayout;
 import android.widget.Scroller;
@@ -45,12 +46,10 @@ import com.chihiro.scrolllayout.content.ContentScrollView;
  * OnScrollProgressListener.
  */
 public class ScrollLayout extends FrameLayout {
-    private static final int MAX_SCROLL_DURATION = 400;
-    private static final int MIN_SCROLL_DURATION = 100;
-    private static final int FLING_VELOCITY_SLOP = 80;
-    private static final float DRAG_SPEED_MULTIPLIER = 1.2f;
-    private static final int DRAG_SPEED_SLOP = 30;
-    private static final int MOTION_DISTANCE_SLOP = 10;
+    private static final int MAX_SCROLL_DURATION = 300;
+    private static final int MIN_SCROLL_DURATION = 80;
+    private static final int FLING_VELOCITY_SLOP = 300;
+    private static final int MOTION_DISTANCE_SLOP = 5;
     private static final float SCROLL_TO_CLOSE_OFFSET_FACTOR = 0.5f;
     private static final float SCROLL_TO_EXIT_OFFSET_FACTOR = 0.8f;
     private final GestureDetector.OnGestureListener gestureListener =
@@ -141,7 +140,7 @@ public class ScrollLayout extends FrameLayout {
     }
 
     {
-        scroller = new Scroller(getContext(), null, true);
+        scroller = new Scroller(getContext(), new DecelerateInterpolator(1.5f));
         gestureDetector = new GestureDetector(getContext(), gestureListener);
     }
 
@@ -345,8 +344,7 @@ public class ScrollLayout extends FrameLayout {
                 lastY = event.getY();
                 return true;
             case MotionEvent.ACTION_MOVE:
-                int deltaY = (int) ((event.getY() - lastY) * DRAG_SPEED_MULTIPLIER);
-                deltaY = (int) (Math.signum(deltaY)) * Math.min(Math.abs(deltaY), DRAG_SPEED_SLOP);
+                int deltaY = (int) (event.getY() - lastY);
                 if (disposeEdgeValue(deltaY)) {
                     return true;
                 }
