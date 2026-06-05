@@ -11,7 +11,7 @@
 
 <p align="center">
   <a href="https://github.com/Chihiro-bit/ChihiroSkip/releases/latest">
-    <img src="app/src/main/ic_launcher-playstore.png" alt="Latest Release"/>
+    <img src="app/src/main/ic_launcher-playstore.png" width="35" alt="Latest Release"/>
   </a>
   <img src="https://img.shields.io/badge/Android-7.0%2B-green?style=for-the-badge&logo=android" alt="Android 7.0+"/>
   <img src="https://img.shields.io/badge/语言-Kotlin-blueviolet?style=for-the-badge&logo=kotlin" alt="Kotlin"/>
