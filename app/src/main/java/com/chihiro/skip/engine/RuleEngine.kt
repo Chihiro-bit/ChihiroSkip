@@ -4,7 +4,9 @@ import android.content.Context
 import android.util.Log
 import android.view.accessibility.AccessibilityNodeInfo
 import android.view.accessibility.AccessibilityWindowInfo
+import com.chihiro.skip.R
 import com.chihiro.skip.model.AdSkipRule
+import com.chihiro.skip.model.RuleAction
 import com.chihiro.skip.model.SkipLog
 import com.chihiro.skip.repository.RuleRepository
 import com.chihiro.skip.repository.SettingsRepository
@@ -27,26 +29,31 @@ class RuleEngine(
         appForegroundTime[packageName] = System.currentTimeMillis()
     }
 
+    /**
+     * 处理一次无障碍事件。
+     * [ProcessResult.IGNORED]：被安全闸/冷却/限频拦截，调用方不得触发 OCR 兜底；
+     * [ProcessResult.HANDLED]：已成功点击；[ProcessResult.NOT_HANDLED]：未命中任何目标（可触发 OCR 兜底）。
+     */
     fun process(
         rootNode: AccessibilityNodeInfo,
         packageName: String,
         screenWidth: Int,
         screenHeight: Int,
         windows: List<AccessibilityWindowInfo>? = null
-    ) {
+    ): ProcessResult {
         val guard = safetyGuard.check(packageName, windows = windows)
         if (guard is SafetyGuard.GuardResult.Blocked) {
-            Log.v(TAG, "Blocked[$packageName]: ${(guard as SafetyGuard.GuardResult.Blocked).reason}")
-            return
+            Log.v(TAG, "Blocked[$packageName]: ${guard.reason}")
+            return ProcessResult.IGNORED
         }
 
         val now = System.currentTimeMillis()
         val lastClick = lastClickTime[packageName] ?: 0L
-        if (now - lastClick < settingsRepo.cooldownMs) return
+        if (now - lastClick < settingsRepo.cooldownMs) return ProcessResult.IGNORED
 
         if (safetyGuard.isRateLimited(packageName)) {
             Log.w(TAG, "Rate limited[$packageName]")
-            return
+            return ProcessResult.IGNORED
         }
 
         val testMode = settingsRepo.testMode
@@ -67,7 +74,7 @@ class RuleEngine(
 
                     val success = tryExecuteRule(rule, rootNode, screenWidth, screenHeight, isPortrait, testMode)
                     recordResult(packageName, rule.name, rule.action.type, success, now)
-                    if (success) return
+                    if (success) return ProcessResult.HANDLED
                 }
             }
         }
@@ -77,14 +84,18 @@ class RuleEngine(
             if (skipNode != null) {
                 val text = skipNode.text?.toString()
                 val desc = skipNode.contentDescription?.toString()
-                if (!safetyGuard.isNodeTextSafe(text, desc)) return
+                if (!safetyGuard.isNodeTextSafe(text, desc)) return ProcessResult.NOT_HANDLED
                 Log.d(TAG, "Basic match: \"$text\" for $packageName")
                 Thread.sleep(300L)
                 val success = clickExecutor.clickNode(skipNode, testMode)
-                recordResult(packageName, "基础识别", "clickNode", success, now)
+                recordResult(packageName, context.getString(R.string.basic_recognition), "clickNode", success, now)
+                if (success) return ProcessResult.HANDLED
             }
         }
+        return ProcessResult.NOT_HANDLED
     }
+
+    enum class ProcessResult { IGNORED, HANDLED, NOT_HANDLED }
 
     private fun tryExecuteRule(
         rule: AdSkipRule,
@@ -103,9 +114,14 @@ class RuleEngine(
             if (ok) return true
         }
 
-        // candidateActions list: try each in sequence
+        // candidateActions list: try each in sequence（坐标类动作需过安全闸，与 relativeAction 分支策略一致）
         if (rule.candidateActions.isNotEmpty()) {
             for (candidate in rule.candidateActions) {
+                if (isCoordinateAction(candidate)) {
+                    if (!safetyGuard.isCoordinateClickAllowed(rule.packageName)) continue
+                    val p = actionPoint(candidate, screenWidth, screenHeight)
+                    if (p == null || !safetyGuard.isCoordinateSafe(p.first, p.second, screenWidth, screenHeight)) continue
+                }
                 val ok = clickExecutor.executeAction(candidate, rootNode, screenWidth, screenHeight, testMode = testMode)
                 if (ok) return true
             }
@@ -130,6 +146,24 @@ class RuleEngine(
             }
         }
         return success
+    }
+
+    private fun isCoordinateAction(a: RuleAction) =
+        a.type == "clickCoordinate" || a.type == "clickRelativeCoordinate" ||
+            a.type == "clickSafeAreaRelative" || a.type == "clickRegion"
+
+    /** 计算坐标类动作的目标点（屏幕像素），非法/未配置返回 null */
+    private fun actionPoint(a: RuleAction, sw: Int, sh: Int): Pair<Float, Float>? = when (a.type) {
+        "clickCoordinate" -> if (a.x > 0 && a.y > 0) a.x.toFloat() to a.y.toFloat() else null
+        "clickRelativeCoordinate" ->
+            if (a.xRatio > 0f && a.yRatio > 0f) sw * a.xRatio to sh * a.yRatio else null
+        "clickSafeAreaRelative" ->
+            if (a.xRatioInSafeArea > 0f && a.yRatioInSafeArea > 0f)
+                sw * a.xRatioInSafeArea to sh * a.yRatioInSafeArea else null
+        "clickRegion" ->
+            sw * (a.regionLeftRatio + a.regionRightRatio) / 2f to
+                sh * (a.regionTopRatio + a.regionBottomRatio) / 2f
+        else -> null
     }
 
     private fun checkValidScreen(rule: AdSkipRule, screenWidth: Int, screenHeight: Int): Boolean {

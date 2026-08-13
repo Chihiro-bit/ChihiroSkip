@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:layout_marginHorizontal="12dp"
+    android:layout_marginVertical="4dp"
     android:paddingHorizontal="16dp"
     android:paddingVertical="10dp"
-    android:background="@color/card_background">
+    android:foreground="?attr/selectableItemBackground"
+    app:cardBackgroundColor="@color/card_background"
+    app:cardCornerRadius="14dp"
+    app:cardElevation="1dp"
+    app:strokeWidth="0dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -59,4 +65,4 @@
             android:textColor="@color/text_secondary"
             android:textSize="11sp" />
     </LinearLayout>
-</LinearLayout>
+</com.google.android.material.card.MaterialCardView>

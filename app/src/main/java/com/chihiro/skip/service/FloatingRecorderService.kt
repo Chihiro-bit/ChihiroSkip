@@ -1,6 +1,7 @@
 package com.chihiro.skip.service
 
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.graphics.PixelFormat
 import android.os.IBinder
@@ -17,9 +18,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.chihiro.skip.R
 import com.chihiro.skip.engine.RuleGenerator
 import com.chihiro.skip.engine.RuleRecorderManager
+import com.chihiro.skip.manager.LanguageHelper
 import com.chihiro.skip.model.AdSkipRule
 import com.chihiro.skip.model.CandidateNode
 import com.chihiro.skip.repository.RuleRepository
+import com.chihiro.skip.ui.CandidateHighlightView
 import com.chihiro.skip.ui.RulePreviewActivity
 
 class FloatingRecorderService : Service() {
@@ -42,11 +45,21 @@ class FloatingRecorderService : Service() {
     private lateinit var candidateAdapter: CandidateAdapter
     private lateinit var manager: RuleRecorderManager
 
+    // ── 全屏高亮层（先于面板 addView，保证面板 z 序在上）────────
+    private var highlightOverlay: CandidateHighlightView? = null
+    private var currentCandidates: List<CandidateNode> = emptyList()
+
     private val candidateListener: (List<CandidateNode>) -> Unit = { candidates ->
         floatView.post {
+            currentCandidates = candidates.take(8)
             candidateAdapter.submitList(candidates)
-            tvStatus.text = "找到 ${candidates.size} 个候选项，请选择"
+            tvStatus.text = getString(R.string.recorder_found_candidates, candidates.size)
+            highlightOverlay?.render(currentCandidates, manager.getSelectedNodes().toSet())
         }
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LanguageHelper.wrap(newBase))
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
@@ -57,7 +70,31 @@ class FloatingRecorderService : Service() {
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
         manager = RuleRecorderManager.getInstance(this)
         manager.addCandidateListener(candidateListener)
+        createHighlightOverlay()
         createFloatingWindow()
+    }
+
+    /** 全屏透明高亮层：先 addView（z 序在下），面板后 add 压在其上 */
+    private fun createHighlightOverlay() {
+        highlightOverlay = CandidateHighlightView(this)
+        windowManager.addView(
+            highlightOverlay,
+            WindowManager.LayoutParams(
+                WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                PixelFormat.TRANSLUCENT
+            ).apply { gravity = Gravity.TOP or Gravity.START }
+        )
+    }
+
+    private fun removeHighlightOverlay() {
+        highlightOverlay?.let {
+            runCatching { windowManager.removeView(it) }
+            highlightOverlay = null
+        }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -70,6 +107,7 @@ class FloatingRecorderService : Service() {
         liveInstance = null
         manager.removeCandidateListener(candidateListener)
         manager.stopRecording()
+        removeHighlightOverlay()
         try { windowManager.removeView(floatView) } catch (_: Exception) {}
     }
 
@@ -94,18 +132,32 @@ class FloatingRecorderService : Service() {
         rvCandidates = floatView.findViewById(R.id.rv_candidates)
 
         candidateAdapter = CandidateAdapter { node ->
-            manager.selectNode(node)
-            val rule = RuleGenerator().generateRule(manager.getCurrentSession() ?: return@CandidateAdapter)
-            rule?.let { launchPreview(it) }
+            manager.toggleSelect(node)
+            candidateAdapter.notifyDataSetChanged()
+            tvStatus.text = getString(R.string.recorder_selected_count, manager.getSelectedNodes().size)
+            highlightOverlay?.post {
+                highlightOverlay?.render(currentCandidates, manager.getSelectedNodes().toSet())
+            }
         }
         rvCandidates.layoutManager = LinearLayoutManager(this)
         rvCandidates.adapter = candidateAdapter
 
         floatView.findViewById<View>(R.id.btn_recorder_scan).setOnClickListener {
-            tvStatus.text = "扫描中..."
+            tvStatus.text = getString(R.string.recorder_scanning)
             val svc = MyAccessibilityService.liveInstance
             if (svc != null) svc.requestScan()
-            else Toast.makeText(this, "请先开启无障碍服务", Toast.LENGTH_SHORT).show()
+            else Toast.makeText(this, R.string.recorder_need_service, Toast.LENGTH_SHORT).show()
+        }
+
+        floatView.findViewById<View>(R.id.btn_recorder_generate).setOnClickListener {
+            val session = manager.getCurrentSession() ?: return@setOnClickListener
+            if (manager.getSelectedNodes().isEmpty()) {
+                Toast.makeText(this, R.string.recorder_no_selection, Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            val rule = RuleGenerator().generateRule(session) ?: return@setOnClickListener
+            removeHighlightOverlay()
+            launchPreview(rule)
         }
 
         floatView.findViewById<View>(R.id.btn_recorder_close).setOnClickListener {
@@ -114,7 +166,7 @@ class FloatingRecorderService : Service() {
 
         setupDrag(floatView.findViewById(R.id.drag_handle))
         windowManager.addView(floatView, layoutParams)
-        tvStatus.text = "就绪 — 导航到目标页面后点击扫描"
+        tvStatus.text = getString(R.string.recorder_ready)
     }
 
     fun onCandidatesReady(pkg: String, activityName: String) {
@@ -185,8 +237,9 @@ class FloatingRecorderService : Service() {
                     node.viewId.isNotEmpty() -> node.viewId.substringAfterLast('/')
                     else -> "(${node.centerX},${node.centerY})"
                 }
-                tvScore.text = "${node.confidenceScore}分"
+                tvScore.text = getString(R.string.candidate_score, node.confidenceScore)
                 tvReason.text = node.reason
+                itemView.isSelected = manager.getSelectedNodes().contains(node)
                 itemView.setOnClickListener { onSelect(node) }
             }
         }

@@ -34,8 +34,23 @@
     <color name="panel_background">#FFF5F5F5</color>
     <color name="danger_red">#FFF44336</color>
 
+    <!-- 控件 -->
+    <color name="drag_handle">#CCCCCC</color>
+
     <!-- 状态指示 -->
     <color name="status_on">#FF34C759</color>
-    <color name="status_off">#FFB0B0B0</color>
+    <color name="status_off">#FFFFB020</color>
     <color name="status_warning">#FFFFB020</color>
+
+    <!-- 状态胶囊 tint（设置面板内） -->
+    <color name="pill_bg_on">#1434C759</color>
+    <color name="pill_bg_off">#14000000</color>
+
+    <!-- 主屏状态胶囊（主屏恒深色底，无需日夜变体） -->
+    <color name="pill_main_bg_on">#FF34C759</color>
+    <color name="pill_main_bg_off">#33FFB020</color>
+
+    <!-- M3 容器色（material 1.8.0 不自动从 colorPrimary 派生 tonal 色） -->
+    <color name="colorPrimaryContainer">#FFE6E4FF</color>
+    <color name="colorOnPrimaryContainer">#FF1A1675</color>
 </resources>

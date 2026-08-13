@@ -14,5 +14,6 @@ data class CandidateNode(
     val yRatio: Float = 0f,
     val clickable: Boolean = false,
     val confidenceScore: Int = 0,
-    val reason: String = ""
+    val reason: String = "",
+    val isFromOcr: Boolean = false
 )

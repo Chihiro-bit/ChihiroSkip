@@ -122,7 +122,6 @@ fun NodeWrapper?.scrollForward(isForward: Boolean = true) {
                         if (isForward) AccessibilityNodeInfo.ACTION_SCROLL_FORWARD
                         else AccessibilityNodeInfo.ACTION_SCROLL_BACKWARD
                     )
-                    Log.e("测试", "执行了")
                     break
                 } else {
                     tempNode = tempNode.parent

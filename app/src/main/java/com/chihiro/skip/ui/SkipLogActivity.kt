@@ -1,5 +1,6 @@
 package com.chihiro.skip.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -7,10 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chihiro.skip.R
+import com.chihiro.skip.manager.LanguageHelper
 import com.chihiro.skip.model.SkipLog
 import com.chihiro.skip.repository.SkipLogRepository
 import com.google.android.material.appbar.MaterialToolbar
@@ -21,6 +22,10 @@ import java.util.Locale
 class SkipLogActivity : AppCompatActivity() {
 
     private val sdf = SimpleDateFormat("MM-dd HH:mm:ss", Locale.getDefault())
+
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LanguageHelper.wrap(newBase))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +47,6 @@ class SkipLogActivity : AppCompatActivity() {
             tvEmpty.visibility = View.VISIBLE
         } else {
             rv.layoutManager = LinearLayoutManager(this)
-            rv.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
             rv.adapter = LogAdapter(logs, sdf)
         }
     }
@@ -72,8 +76,10 @@ class SkipLogActivity : AppCompatActivity() {
 
         override fun onBindViewHolder(h: VH, pos: Int) {
             val log = items[pos]
-            h.tvRule.text = log.ruleName.ifEmpty { "基础识别" }
-            h.tvResult.text = if (log.success) "✓ 成功" else "✗ 失败"
+            h.tvRule.text = log.ruleName.ifEmpty { h.itemView.context.getString(R.string.basic_recognition) }
+            h.tvResult.text = h.itemView.context.getString(
+                if (log.success) R.string.log_success else R.string.log_failed
+            )
             h.tvResult.setTextColor(
                 h.itemView.context.getColor(if (log.success) R.color.status_on else R.color.danger_red)
             )

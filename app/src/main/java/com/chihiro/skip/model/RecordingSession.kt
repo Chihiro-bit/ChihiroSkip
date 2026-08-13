@@ -10,6 +10,6 @@ data class RecordingSession(
     val screenHeight: Int = 0,
     val capturedAt: Long = System.currentTimeMillis(),
     val candidates: List<CandidateNode> = emptyList(),
-    val selectedNode: CandidateNode? = null,
+    val selectedNodes: List<CandidateNode> = emptyList(),
     val isCoordinateCapture: Boolean = false
 )

@@ -1,0 +1,178 @@
+<resources>
+    <string name="app_name">Chihiro</string>
+    <string name="app_description">A free and open source tool that automatically skips app splash ads</string>
+    <string name="accessibility_description">If the accessibility service malfunctions, turn it off and on again.</string>
+    <string name="attention">Notes</string>
+    <string name="attention_content">The accessibility service turns off automatically when the app process ends, so please allow the app to run in the background</string>
+    <string name="operation">How to use</string>
+    <string name="service_status_disable">Accessibility service is disabled~</string>
+    <string name="service_status_enable">Accessibility service is enabled</string>
+    <string name="service_is_enable_tips">Accessibility service is already enabled! No need to enable it again~</string>
+    <string name="open_target_app">Open target app</string>
+
+    <!-- Settings panel -->
+    <string name="panel_title">Settings</string>
+    <string name="section_service_status">Service Status</string>
+    <string name="section_intercept_mode">Intercept Mode</string>
+    <string name="section_basic_recognition">Basic Recognition</string>
+    <string name="section_rule_management">Precise Rules</string>
+    <string name="section_debug">Debug</string>
+    <string name="section_log_stats">Log Statistics</string>
+    <string name="section_safety">Safety Settings</string>
+
+    <string name="accessibility_status">Accessibility service:</string>
+    <string name="accessibility_on">Enabled</string>
+    <string name="accessibility_off">Disabled</string>
+    <string name="open_accessibility_settings">Open accessibility settings</string>
+    <string name="intercept_status">Intercept status:</string>
+    <string name="intercept_running">Running</string>
+    <string name="intercept_stopped">Stopped</string>
+
+    <string name="mode_basic">Basic mode (keyword recognition)</string>
+    <string name="mode_precise">Precise mode (rules only)</string>
+    <string name="mode_mixed">Mixed mode (rules first, then basic recognition)</string>
+
+    <string name="enable_basic_skip">Enable basic keyword recognition</string>
+    <string name="enable_precise_rule">Enable precise rules</string>
+    <string name="enable_coordinate_click">Enable coordinate clicks</string>
+
+    <string name="import_rules">Import rules JSON</string>
+    <string name="export_rules">Export rules JSON</string>
+    <string name="view_rules">View/manage rules</string>
+    <string name="rule_count">Loaded rules: %1$d</string>
+
+    <string name="test_mode">Test mode (recognize only, no clicks)</string>
+    <string name="test_mode_toast">Test mode: recognize only, no clicks</string>
+    <string name="current_package">Current package: %1$s</string>
+
+    <string name="today_skip_count">Skipped today: %1$d</string>
+    <string name="total_skip_count">Total skipped: %1$d</string>
+    <string name="view_logs">View skip logs</string>
+    <string name="clear_logs">Clear logs</string>
+    <string name="logs_cleared">Logs cleared</string>
+
+    <string name="cooldown_ms_label">Click cooldown (ms):</string>
+    <string name="max_clicks_label">Max clicks per minute:</string>
+    <string name="allow_restore_state">Restore last intercept state</string>
+    <string name="log_enabled">Record skip logs</string>
+
+    <string name="import_success">Imported %1$d, failed %2$d</string>
+    <string name="export_success">Rules exported</string>
+    <string name="export_failed">Export failed</string>
+    <string name="confirm_clear_logs">Clear all logs?</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+
+    <!-- Import result dialog -->
+    <string name="import_dialog_title">Import result</string>
+    <string name="import_result_success">Success: %1$d</string>
+    <string name="import_result_failed">Failed: %1$d</string>
+    <string name="import_failed_header">Failure reasons:</string>
+    <string name="import_error_read">Unable to read file</string>
+    <string name="import_error_not_json_object">File is not a valid JSON object</string>
+    <string name="import_error_too_large">File too large (over the 5 MB limit)</string>
+    <string name="import_error_exception">Import error: %1$s</string>
+    <string name="import_error_no_rules_array">Invalid JSON: missing rules array</string>
+    <string name="import_error_item_parse">Item %1$d: parse failed</string>
+    <string name="import_error_item_exception">Item %1$d: %2$s</string>
+    <string name="import_error_json_parse">JSON parse failed: %1$s</string>
+
+    <!-- Rule list -->
+    <string name="rule_list_title">Rule Management</string>
+    <string name="rule_empty">No rules yet. Import a rules JSON first</string>
+    <string name="rule_enabled">Enabled</string>
+    <string name="rule_disabled">Disabled</string>
+    <string name="delete_rule">Delete</string>
+    <string name="delete_rule_confirm">Delete rule "%1$s"?</string>
+    <string name="rule_unnamed">(Unnamed rule)</string>
+    <string name="rule_applies_all">Applies to all apps</string>
+    <string name="rule_priority">Priority: %1$d</string>
+
+    <!-- Log list -->
+    <string name="log_list_title">Skip Logs</string>
+    <string name="log_empty">No logs yet</string>
+    <string name="log_success">✓ Success</string>
+    <string name="log_failed">✗ Failed</string>
+    <string name="basic_recognition">Basic recognition</string>
+
+    <!-- Rule recorder -->
+    <string name="section_recorder">Rule Recorder</string>
+    <string name="recorder_desc">Scan the target page with a floating window and auto-generate skip rules</string>
+    <string name="start_recorder">Start recorder</string>
+    <string name="recorder_permission_title">Overlay permission required</string>
+    <string name="recorder_permission_msg">The rule recorder needs to display a floating window. Grant the permission in settings and try again</string>
+    <string name="recorder_permission_grant">Grant permission</string>
+    <string name="recorder_started_toast">Recorder started. Switch to the target app</string>
+    <string name="recorder_title">Rule Recorder</string>
+    <string name="recorder_ready_short">Ready</string>
+    <string name="recorder_ready">Ready — navigate to the target page and tap scan</string>
+    <string name="recorder_scan">Scan page</string>
+    <string name="recorder_scanning">Scanning...</string>
+    <string name="recorder_found_candidates">Found %1$d candidates, tap one to select</string>
+    <string name="recorder_need_service">Please enable the accessibility service first</string>
+    <string name="candidate_score">%1$d pts</string>
+    <string name="scan_reason_text">Text:"%1$s"</string>
+    <string name="scan_reason_desc">Desc:"%1$s"</string>
+    <string name="scan_reason_id">ID:%1$s</string>
+    <string name="scan_reason_clickable">Clickable</string>
+    <string name="scan_reason_score">Score:%1$d</string>
+
+    <!-- Notification -->
+    <string name="notif_title">Chihiro is running</string>
+    <string name="notif_running">Ad skip service is working</string>
+    <string name="notif_channel_name">Chihiro running status</string>
+    <string name="notif_channel_desc">Shows the running status of the Chihiro ad skip service</string>
+
+    <!-- Settings panel descriptions -->
+    <string name="test_mode_desc">Recognize targets only, no clicks</string>
+    <string name="coordinate_click_desc">Requires coordinate info in the rules file</string>
+    <string name="restore_state_desc">Restore last switch state after service restart</string>
+
+    <!-- Rule preview -->
+    <string name="rule_preview_title">Rule Preview</string>
+    <string name="rule_saved">Rule saved</string>
+    <string name="save">Save</string>
+    <string name="none">None</string>
+    <string name="preview_coord_relative">Relative coordinate (%1$.3f, %2$.3f)</string>
+    <string name="preview_coord_absolute">Absolute coordinate (%1$d, %2$d)</string>
+    <string name="preview_match_text">Text match: %1$s\n</string>
+    <string name="preview_match_package">Package match</string>
+    <string name="preview_alt_coord">Backup: relative coordinate (%1$.3f, %2$.3f)</string>
+
+    <!-- Language -->
+    <string name="section_language">Language</string>
+    <string name="language_label">Language</string>
+    <string name="language_follow_system">Follow system</string>
+
+    <!-- Main screen -->
+    <string name="main_badge">AD SKIP · FREE &amp; OPEN SOURCE</string>
+    <string name="main_hint">Tap the button to start skipping ads</string>
+    <string name="main_status_on">Accessibility service · Enabled</string>
+    <string name="main_status_off">Accessibility service · Disabled</string>
+
+    <!-- Rule preview labels -->
+    <string name="rule_name_label">Rule name</string>
+    <string name="rule_target_app_label">Target app</string>
+    <string name="rule_action_label">Primary action</string>
+    <string name="rule_match_label">Match conditions</string>
+    <string name="rule_alt_action_label">Backup coordinate actions</string>
+    <string name="rule_name_hint">Enter rule name</string>
+
+    <!-- Enhanced recognition (OCR) -->
+    <string name="section_ocr_enhance">Enhanced Recognition</string>
+    <string name="ocr_enabled_label">OCR fallback</string>
+    <string name="ocr_enabled_desc">When the accessibility tree finds no skip button, screenshot-recognize "skip/close" and tap it</string>
+    <string name="ocr_api_note">This device runs Android %1$d; OCR fallback requires Android 11 (API 30) or higher</string>
+    <string name="ocr_fallback_rule_name">OCR fallback</string>
+    <string name="scan_reason_ocr">OCR: "%1$s"</string>
+    <string name="recorder_generate">Generate rule</string>
+    <string name="recorder_no_selection">Select at least one candidate first</string>
+    <string name="recorder_selected_count">%1$d selected — tap to toggle</string>
+
+    <!-- About -->
+    <string name="section_about">About</string>
+    <string name="about_version">Version</string>
+    <string name="github_releases">GitHub Releases (check updates)</string>
+    <string name="online_rule_library">Online rule library</string>
+    <string name="link_open_failed">Unable to open link</string>
+</resources>

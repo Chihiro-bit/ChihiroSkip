@@ -2,6 +2,7 @@ package com.chihiro.skip.repository
 
 import android.content.Context
 import android.util.Log
+import com.chihiro.skip.R
 import com.chihiro.skip.model.AdSkipRule
 import com.chihiro.skip.model.MatchCondition
 import com.chihiro.skip.model.RuleAction
@@ -34,6 +35,7 @@ class RuleRepository private constructor(private val context: Context) {
             }
     }
 
+    @Synchronized
     fun loadRules() {
         try {
             if (!rulesFile.exists()) return
@@ -49,6 +51,7 @@ class RuleRepository private constructor(private val context: Context) {
         }
     }
 
+    @Synchronized
     fun saveRules() {
         try {
             val arr = JSONArray()
@@ -63,6 +66,7 @@ class RuleRepository private constructor(private val context: Context) {
         }
     }
 
+    @Synchronized
     fun addRule(rule: AdSkipRule) {
         _rules.removeAll { it.id == rule.id }
         _rules.add(rule)
@@ -70,6 +74,7 @@ class RuleRepository private constructor(private val context: Context) {
         saveRules()
     }
 
+    @Synchronized
     fun updateRule(rule: AdSkipRule) {
         val idx = _rules.indexOfFirst { it.id == rule.id }
         if (idx >= 0) {
@@ -79,10 +84,12 @@ class RuleRepository private constructor(private val context: Context) {
         }
     }
 
+    @Synchronized
     fun deleteRule(id: String) {
         if (_rules.removeAll { it.id == id }) saveRules()
     }
 
+    @Synchronized
     fun setRuleEnabled(id: String, enabled: Boolean) {
         val idx = _rules.indexOfFirst { it.id == id }
         if (idx >= 0) {
@@ -91,6 +98,7 @@ class RuleRepository private constructor(private val context: Context) {
         }
     }
 
+    @Synchronized
     fun getRulesForPackage(packageName: String): List<AdSkipRule> =
         _rules.filter {
             it.enabled && (it.packageName.isEmpty() || it.packageName == packageName)
@@ -100,22 +108,26 @@ class RuleRepository private constructor(private val context: Context) {
         return try {
             val jsonObj = JSONObject(jsonText)
             val arr = jsonObj.optJSONArray("rules")
-                ?: return ImportResult(0, 1, listOf("JSON 格式错误：缺少 rules 数组"))
+                ?: return ImportResult(
+                    0, 1, listOf(context.getString(R.string.import_error_no_rules_array))
+                )
             val success = mutableListOf<AdSkipRule>()
             val failed = mutableListOf<String>()
             for (i in 0 until arr.length()) {
                 try {
                     val rule = parseRule(arr.getJSONObject(i))
                     if (rule != null) success.add(rule)
-                    else failed.add("第 ${i + 1} 条：解析失败")
+                    else failed.add(context.getString(R.string.import_error_item_parse, i + 1))
                 } catch (e: Exception) {
-                    failed.add("第 ${i + 1} 条：${e.message}")
+                    failed.add(context.getString(R.string.import_error_item_exception, i + 1, e.message))
                 }
             }
             success.forEach { addRule(it) }
             ImportResult(success.size, failed.size, failed)
         } catch (e: Exception) {
-            ImportResult(0, 1, listOf("JSON 解析失败：${e.message}"))
+            ImportResult(
+                0, 1, listOf(context.getString(R.string.import_error_json_parse, e.message))
+            )
         }
     }
 

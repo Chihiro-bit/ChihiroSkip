@@ -49,9 +49,19 @@ class RuleRecorderManager private constructor(private val context: Context) {
         snapshot.forEach { it(candidates) }
     }
 
-    fun selectNode(node: CandidateNode) {
-        currentSession = currentSession?.copy(selectedNode = node)
+    /** 点候选切换选中状态（多选，生成时按选中顺序作为 candidateActions） */
+    fun toggleSelect(node: CandidateNode) {
+        currentSession = currentSession?.let { s ->
+            if (node in s.selectedNodes) s.copy(selectedNodes = s.selectedNodes - node)
+            else s.copy(selectedNodes = s.selectedNodes + node)
+        }
     }
+
+    fun clearSelection() {
+        currentSession = currentSession?.copy(selectedNodes = emptyList())
+    }
+
+    fun getSelectedNodes(): List<CandidateNode> = currentSession?.selectedNodes ?: emptyList()
 
     fun addCandidateListener(listener: (List<CandidateNode>) -> Unit) {
         synchronized(candidateListeners) { candidateListeners.add(listener) }

@@ -73,6 +73,7 @@ class SafetyGuard(private val context: Context, private val settingsRepo: Settin
         val now = System.currentTimeMillis()
         val times = clickTimestamps.getOrPut(packageName) { mutableListOf() }
         times.removeAll { now - it > 60_000L }
+        if (times.isEmpty()) clickTimestamps.remove(packageName)
         return times.size >= settingsRepo.maxClicksPerMinute
     }
 

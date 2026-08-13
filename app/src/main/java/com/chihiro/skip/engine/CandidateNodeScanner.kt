@@ -1,10 +1,12 @@
 package com.chihiro.skip.engine
 
+import android.content.Context
 import android.graphics.Rect
 import android.view.accessibility.AccessibilityNodeInfo
+import com.chihiro.skip.R
 import com.chihiro.skip.model.CandidateNode
 
-class CandidateNodeScanner {
+class CandidateNodeScanner(private val context: Context) {
 
     private val skipKeywords = setOf(
         "跳过", "skip", "关闭广告", "close ad", "跳过广告", "skip ad",
@@ -98,10 +100,11 @@ class CandidateNodeScanner {
         text: String, desc: String, viewId: String,
         node: AccessibilityNodeInfo, score: Int
     ): String = buildString {
-        if (text.isNotEmpty()) append("文字:\"$text\" ")
-        if (desc.isNotEmpty()) append("描述:\"$desc\" ")
-        if (viewId.isNotEmpty()) append("ID:${viewId.substringAfterLast('/')} ")
-        if (node.isClickable) append("可点击 ")
-        append("得分:$score")
+        if (text.isNotEmpty()) append(context.getString(R.string.scan_reason_text, text)).append(' ')
+        if (desc.isNotEmpty()) append(context.getString(R.string.scan_reason_desc, desc)).append(' ')
+        if (viewId.isNotEmpty())
+            append(context.getString(R.string.scan_reason_id, viewId.substringAfterLast('/'))).append(' ')
+        if (node.isClickable) append(context.getString(R.string.scan_reason_clickable)).append(' ')
+        append(context.getString(R.string.scan_reason_score, score))
     }
 }

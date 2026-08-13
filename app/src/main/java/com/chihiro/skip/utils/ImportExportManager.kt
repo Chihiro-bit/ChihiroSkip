@@ -3,6 +3,7 @@ package com.chihiro.skip.utils
 import android.content.Context
 import android.net.Uri
 import android.util.Log
+import com.chihiro.skip.R
 import com.chihiro.skip.repository.RuleRepository
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -20,21 +21,29 @@ object ImportExportManager {
         return try {
             val json = context.contentResolver.openInputStream(uri)?.use { stream ->
                 BufferedReader(InputStreamReader(stream)).readText()
-            } ?: return RuleRepository.ImportResult(0, 1, listOf("无法读取文件"))
+            } ?: return RuleRepository.ImportResult(
+                0, 1, listOf(context.getString(R.string.import_error_read))
+            )
 
             // 基础安全检查：只接受 JSON 对象
             val trimmed = json.trim()
             if (!trimmed.startsWith("{")) {
-                return RuleRepository.ImportResult(0, 1, listOf("文件不是合法的 JSON 对象"))
+                return RuleRepository.ImportResult(
+                    0, 1, listOf(context.getString(R.string.import_error_not_json_object))
+                )
             }
             if (trimmed.length > 5 * 1024 * 1024) {
-                return RuleRepository.ImportResult(0, 1, listOf("文件过大，超过 5 MB 限制"))
+                return RuleRepository.ImportResult(
+                    0, 1, listOf(context.getString(R.string.import_error_too_large))
+                )
             }
 
             RuleRepository.getInstance(context).importRules(json)
         } catch (e: Exception) {
             Log.e(TAG, "importFromUri failed", e)
-            RuleRepository.ImportResult(0, 1, listOf("导入异常：${e.message}"))
+            RuleRepository.ImportResult(
+                0, 1, listOf(context.getString(R.string.import_error_exception, e.message))
+            )
         }
     }
 

@@ -2,8 +2,10 @@ package com.chihiro.skip
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
-import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
@@ -31,6 +33,7 @@ import com.chihiro.scrolllayout.ScrollLayout
 import com.chihiro.scrolllayout.content.ContentScrollView
 import com.chihiro.skip.accessibility.isAccessibilityEnable
 import com.chihiro.skip.accessibility.requireAccessibility
+import com.chihiro.skip.manager.LanguageHelper
 import com.chihiro.skip.repository.RuleRepository
 import com.chihiro.skip.repository.SettingsRepository
 import com.chihiro.skip.repository.SkipLogRepository
@@ -50,6 +53,11 @@ import kotlin.math.hypot
 
 class MainActivity : AppCompatActivity() {
 
+    companion object {
+        const val GITHUB_RELEASES_URL = "https://github.com/Chihiro-bit/ChihiroSkip/releases"
+        const val ONLINE_RULES_URL = "https://github.com/Chihiro-bit/ChihiroSkip-Rules"
+    }
+
     // ── 视图引用 ──────────────────────────────────────────
     private lateinit var constraintLayout: ConstraintLayout
     private lateinit var startButton: ImageButton
@@ -58,6 +66,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mScrollLayout: ScrollLayout
     private lateinit var settingsScrollView: ContentScrollView
     private lateinit var textInfo: TextView
+    private lateinit var tvStatusPill: TextView
 
     // ── 设置面板视图 ──────────────────────────────────────
     private lateinit var tvAccessibilityStatus: TextView
@@ -77,6 +86,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var etMaxClicks: EditText
     private lateinit var swCoordinateClick: SwitchMaterial
     private lateinit var swRestoreState: SwitchMaterial
+    private lateinit var tvLanguageCurrent: TextView
 
     // ── 仓库 ──────────────────────────────────────────────
     private lateinit var settingsRepo: SettingsRepository
@@ -135,6 +145,10 @@ class MainActivity : AppCompatActivity() {
     // 生命周期
     // ════════════════════════════════════════════════════════
 
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LanguageHelper.wrap(newBase))
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -146,15 +160,15 @@ class MainActivity : AppCompatActivity() {
         initView()
         initSettingsPanel()
 
-        // 点击背景关闭面板
         relativeLayout.setOnClickListener { mScrollLayout.scrollToExit() }
-
-        // 开始/停止按钮
         startButton.setOnClickListener { handleStartButton() }
+
+        requestNotificationPermission()
     }
 
     override fun onResume() {
         super.onResume()
+        restoreVisualState()
         updateAccessibilityStatus()
         updateInterceptStatus()
         updateSettingsPanel()
@@ -174,6 +188,7 @@ class MainActivity : AppCompatActivity() {
         startButton = findViewById(R.id.start_button)
         constraintLayoutResult = findViewById(R.id.result_view)
         textInfo = findViewById(R.id.textView2)
+        tvStatusPill = findViewById(R.id.tv_status_pill)
 
         mScrollLayout = findViewById(R.id.scroll_down_layout)
         settingsScrollView = findViewById(R.id.settings_scroll_view)
@@ -242,7 +257,7 @@ class MainActivity : AppCompatActivity() {
 
         swTestMode.setOnCheckedChangeListener { _, checked ->
             settingsRepo.testMode = checked
-            if (checked) Toast.makeText(this, "测试模式：只识别，不点击", Toast.LENGTH_SHORT).show()
+            if (checked) Toast.makeText(this, R.string.test_mode_toast, Toast.LENGTH_SHORT).show()
         }
 
         // 日志统计
@@ -304,6 +319,74 @@ class MainActivity : AppCompatActivity() {
         swRestoreState.setOnCheckedChangeListener { _, checked ->
             settingsRepo.allowRestoreLastState = checked
         }
+
+        // 语言
+        tvLanguageCurrent = findViewById(R.id.tv_language_current)
+        findViewById<View>(R.id.btn_language).setOnClickListener {
+            showLanguageDialog()
+        }
+
+        // 增强识别（OCR 兜底）
+        val swOcr = findViewById<SwitchMaterial>(R.id.sw_ocr)
+        swOcr.isChecked = settingsRepo.ocrEnabled
+        swOcr.setOnCheckedChangeListener { _, checked ->
+            settingsRepo.ocrEnabled = checked
+        }
+        val tvOcrApiNote = findViewById<TextView>(R.id.tv_ocr_api_note)
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+            tvOcrApiNote.visibility = View.VISIBLE
+            tvOcrApiNote.text = getString(R.string.ocr_api_note, Build.VERSION.SDK_INT)
+        }
+
+        // 关于
+        findViewById<TextView>(R.id.tv_version).text =
+            runCatching { packageManager.getPackageInfo(packageName, 0).versionName }.getOrNull() ?: "?"
+        findViewById<View>(R.id.btn_github_releases).setOnClickListener {
+            openLink(GITHUB_RELEASES_URL)
+        }
+        findViewById<View>(R.id.btn_online_rules).setOnClickListener {
+            openLink(ONLINE_RULES_URL)
+        }
+    }
+
+    /** 用浏览器打开外部链接（App 无网络权限，只能跳转） */
+    private fun openLink(url: String) {
+        try {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+        } catch (e: Exception) {
+            Toast.makeText(this, R.string.link_open_failed, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    // ════════════════════════════════════════════════════════
+    // 语言切换
+    // ════════════════════════════════════════════════════════
+
+    private fun showLanguageDialog() {
+        val displayNames = arrayOf(
+            getString(R.string.language_follow_system),
+            "简体中文", "English", "日本語", "한국어", "Français"
+        )
+        val checked = LanguageHelper.SUPPORTED_TAGS
+            .indexOfFirst { it == LanguageHelper.currentTag(this) }
+            .coerceAtLeast(0)
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.language_label)
+            .setSingleChoiceItems(displayNames, checked) { dialog, which ->
+                dialog.dismiss()
+                LanguageHelper.applyLanguage(this, LanguageHelper.SUPPORTED_TAGS[which])
+            }
+            .show()
+    }
+
+    private fun languageDisplayName(tag: String): String = when (tag) {
+        "" -> getString(R.string.language_follow_system)
+        "zh" -> "简体中文"
+        "en" -> "English"
+        "ja" -> "日本語"
+        "ko" -> "한국어"
+        "fr" -> "Français"
+        else -> tag
     }
 
     // ════════════════════════════════════════════════════════
@@ -327,7 +410,7 @@ class MainActivity : AppCompatActivity() {
             return
         }
         startService(Intent(this, FloatingRecorderService::class.java))
-        Toast.makeText(this, "录制助手已启动，请切换到目标应用", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, R.string.recorder_started_toast, Toast.LENGTH_SHORT).show()
     }
 
     // ════════════════════════════════════════════════════════
@@ -363,11 +446,21 @@ class MainActivity : AppCompatActivity() {
         if (isAccessibilityEnable) {
             tvAccessibilityStatus.text = getString(R.string.accessibility_on)
             tvAccessibilityStatus.setTextColor(getColor(R.color.status_on))
+            tvAccessibilityStatus.backgroundTintList =
+                ColorStateList.valueOf(getColor(R.color.pill_bg_on))
             textInfo.text = getString(R.string.service_status_enable)
+            tvStatusPill.text = getString(R.string.main_status_on)
+            tvStatusPill.backgroundTintList =
+                ColorStateList.valueOf(getColor(R.color.pill_main_bg_on))
         } else {
             tvAccessibilityStatus.text = getString(R.string.accessibility_off)
             tvAccessibilityStatus.setTextColor(getColor(R.color.status_off))
+            tvAccessibilityStatus.backgroundTintList =
+                ColorStateList.valueOf(getColor(R.color.pill_bg_off))
             textInfo.text = getString(R.string.service_status_disable)
+            tvStatusPill.text = getString(R.string.main_status_off)
+            tvStatusPill.backgroundTintList =
+                ColorStateList.valueOf(getColor(R.color.pill_main_bg_off))
         }
     }
 
@@ -379,6 +472,31 @@ class MainActivity : AppCompatActivity() {
         tvInterceptStatus.setTextColor(
             getColor(if (running) R.color.status_on else R.color.status_off)
         )
+        tvInterceptStatus.backgroundTintList = ColorStateList.valueOf(
+            getColor(if (running) R.color.pill_bg_on else R.color.pill_bg_off)
+        )
+    }
+
+    // 根据持久化状态恢复视觉层，避免切换暗色/亮色模式后 Activity 重建导致界面显示与实际状态不符
+    private fun restoreVisualState() {
+        if (settingsRepo.interceptEnabled) {
+            constraintLayout.setBackgroundColor(Color.TRANSPARENT)
+            constraintLayoutResult.visibility = View.VISIBLE
+            constraintLayoutResult.setBackgroundColor(getColor(R.color.colorSuccess))
+        } else {
+            constraintLayoutResult.visibility = View.INVISIBLE
+            @Suppress("DEPRECATION")
+            constraintLayout.background = resources.getDrawable(R.drawable.bg_main_gradient, theme)
+        }
+    }
+
+    private fun requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 0)
+            }
+        }
     }
 
     private fun updateSettingsPanel() {
@@ -403,6 +521,7 @@ class MainActivity : AppCompatActivity() {
         updateLogStats()
         updateAccessibilityStatus()
         updateInterceptStatus()
+        tvLanguageCurrent.text = languageDisplayName(LanguageHelper.currentTag(this))
     }
 
     private fun updateRuleCount() {
@@ -421,9 +540,9 @@ class MainActivity : AppCompatActivity() {
     private fun showImportResult(result: RuleRepository.ImportResult) {
         val dialogView = layoutInflater.inflate(R.layout.dialog_import_result, null)
         dialogView.findViewById<TextView>(R.id.tv_import_success_count).text =
-            "成功：${result.successCount} 条"
+            getString(R.string.import_result_success, result.successCount)
         dialogView.findViewById<TextView>(R.id.tv_import_failed_count).text =
-            "失败：${result.failedCount} 条"
+            getString(R.string.import_result_failed, result.failedCount)
         if (result.failedReasons.isNotEmpty()) {
             dialogView.findViewById<TextView>(R.id.tv_import_failed_header).visibility = View.VISIBLE
             dialogView.findViewById<TextView>(R.id.tv_import_failed_reasons).text =

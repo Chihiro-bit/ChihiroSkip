@@ -1,12 +1,15 @@
 package com.chihiro.skip.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.chihiro.skip.R
+import com.chihiro.skip.manager.LanguageHelper
 import com.chihiro.skip.repository.RuleRepository
+import com.google.android.material.appbar.MaterialToolbar
 
 class RulePreviewActivity : AppCompatActivity() {
 
@@ -23,9 +26,14 @@ class RulePreviewActivity : AppCompatActivity() {
     private lateinit var repo: RuleRepository
     private var ruleId: String = ""
 
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LanguageHelper.wrap(newBase))
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_rule_preview)
+        setSupportActionBar(findViewById<MaterialToolbar>(R.id.toolbar))
 
         repo = RuleRepository.getInstance(this)
         ruleId = intent.getStringExtra(EXTRA_RULE_ID) ?: run { finish(); return }
@@ -62,20 +70,20 @@ class RulePreviewActivity : AppCompatActivity() {
         val a = rule.action
         tvAction.text = when (a.type) {
             "clickNode" -> "${a.clickBy}: \"${a.value}\""
-            "clickRelativeCoordinate" -> "相对坐标 (${String.format("%.3f", a.xRatio)}, ${String.format("%.3f", a.yRatio)})"
-            "clickCoordinate" -> "绝对坐标 (${a.x}, ${a.y})"
+            "clickRelativeCoordinate" -> getString(R.string.preview_coord_relative, a.xRatio, a.yRatio)
+            "clickCoordinate" -> getString(R.string.preview_coord_absolute, a.x, a.y)
             else -> a.type
         }
         val m = rule.matchCondition
         tvMatchCondition.text = buildString {
             if (m.activityName.isNotEmpty()) append("Activity: ${m.activityName}\n")
-            if (m.textEquals.isNotEmpty()) append("文字匹配: ${m.textEquals}\n")
+            if (m.textEquals.isNotEmpty()) append(getString(R.string.preview_match_text, m.textEquals))
             if (m.viewId.isNotEmpty()) append("ViewId: ${m.viewId}\n")
-            if (isEmpty()) append("包名匹配")
+            if (isEmpty()) append(getString(R.string.preview_match_package))
         }.trimEnd()
         val r = rule.relativeAction
         tvRelativeAction.text = if (r != null)
-            "备选: 相对坐标 (${String.format("%.3f", r.xRatio)}, ${String.format("%.3f", r.yRatio)})"
+            getString(R.string.preview_alt_coord, r.xRatio, r.yRatio)
         else getString(R.string.none)
     }
 

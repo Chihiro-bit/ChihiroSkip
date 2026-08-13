@@ -27,7 +27,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="规则录制"
+            android:text="@string/recorder_title"
             android:textColor="#F5F7FA"
             android:textSize="13sp"
             android:textStyle="bold" />
@@ -59,7 +59,7 @@
             android:id="@+id/tv_recorder_status"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="就绪"
+            android:text="@string/recorder_ready_short"
             android:textColor="#00D1FF"
             android:textSize="12sp" />
 
@@ -80,7 +80,7 @@
         android:layout_width="match_parent"
         android:layout_height="36dp"
         android:gravity="center"
-        android:text="扫描页面"
+        android:text="@string/recorder_scan"
         android:textColor="#FFFFFF"
         android:textSize="13sp"
         android:textStyle="bold"
@@ -97,5 +97,20 @@
         android:maxHeight="280dp"
         android:background="#CC12141F"
         android:nestedScrollingEnabled="false" />
+
+    <!-- 生成规则（主操作） -->
+    <TextView
+        android:id="@+id/btn_recorder_generate"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:gravity="center"
+        android:text="@string/recorder_generate"
+        android:textColor="#FFFFFF"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        android:background="#FF34C759"
+        android:foreground="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true" />
 
 </LinearLayout>

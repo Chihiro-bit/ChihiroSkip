@@ -1,0 +1,178 @@
+<resources>
+    <string name="app_name">치히로</string>
+    <string name="app_description">앱 시작 화면 광고를 자동으로 건너뛰는 무료 오픈소스 도구</string>
+    <string name="accessibility_description">접근성 서비스에 문제가 생기면 껐다가 다시 켜세요.</string>
+    <string name="attention">주의사항</string>
+    <string name="attention_content">접근성 서비스는 앱 프로세스가 종료되면 자동으로 꺼지므로 앱의 백그라운드 실행 권한을 허용해야 합니다</string>
+    <string name="operation">사용 방법</string>
+    <string name="service_status_disable">접근성 서비스가 꺼져 있어요~</string>
+    <string name="service_status_enable">접근성 서비스가 켜져 있습니다</string>
+    <string name="service_is_enable_tips">접근성 서비스가 이미 켜져 있어요! 다시 켤 필요가 없습니다~</string>
+    <string name="open_target_app">대상 앱 열기</string>
+
+    <!-- 설정 패널 -->
+    <string name="panel_title">설정</string>
+    <string name="section_service_status">서비스 상태</string>
+    <string name="section_intercept_mode">차단 모드</string>
+    <string name="section_basic_recognition">기본 인식</string>
+    <string name="section_rule_management">정밀 규칙</string>
+    <string name="section_debug">디버그</string>
+    <string name="section_log_stats">로그 통계</string>
+    <string name="section_safety">안전 설정</string>
+
+    <string name="accessibility_status">접근성 서비스：</string>
+    <string name="accessibility_on">켜짐</string>
+    <string name="accessibility_off">꺼짐</string>
+    <string name="open_accessibility_settings">접근성 설정 열기</string>
+    <string name="intercept_status">차단 상태：</string>
+    <string name="intercept_running">실행 중</string>
+    <string name="intercept_stopped">중지됨</string>
+
+    <string name="mode_basic">기본 모드 (키워드 인식)</string>
+    <string name="mode_precise">정밀 모드 (규칙만 사용)</string>
+    <string name="mode_mixed">혼합 모드 (규칙 우선, 실패 시 기본 인식)</string>
+
+    <string name="enable_basic_skip">기본 키워드 인식 활성화</string>
+    <string name="enable_precise_rule">정밀 규칙 활성화</string>
+    <string name="enable_coordinate_click">좌표 클릭 활성화</string>
+
+    <string name="import_rules">규칙 JSON 가져오기</string>
+    <string name="export_rules">규칙 JSON 내보내기</string>
+    <string name="view_rules">규칙 보기/관리</string>
+    <string name="rule_count">로드된 규칙：%1$d개</string>
+
+    <string name="test_mode">테스트 모드 (인식만, 클릭 안 함)</string>
+    <string name="test_mode_toast">테스트 모드：인식만 하고 클릭하지 않습니다</string>
+    <string name="current_package">현재 패키지：%1$s</string>
+
+    <string name="today_skip_count">오늘 건너뜀：%1$d회</string>
+    <string name="total_skip_count">누적 건너뜀：%1$d회</string>
+    <string name="view_logs">건너뛰기 로그 보기</string>
+    <string name="clear_logs">로그 비우기</string>
+    <string name="logs_cleared">로그를 비웠습니다</string>
+
+    <string name="cooldown_ms_label">클릭 쿨다운 (밀리초)：</string>
+    <string name="max_clicks_label">분당 최대 클릭 수：</string>
+    <string name="allow_restore_state">마지막 차단 상태 복원</string>
+    <string name="log_enabled">건너뛰기 로그 기록</string>
+
+    <string name="import_success">%1$d개 가져오기 성공, %2$d개 실패</string>
+    <string name="export_success">규칙을 내보냈습니다</string>
+    <string name="export_failed">내보내기 실패</string>
+    <string name="confirm_clear_logs">모든 로그를 비우시겠습니까?</string>
+    <string name="cancel">취소</string>
+    <string name="confirm">확인</string>
+
+    <!-- 가져오기 결과 다이얼로그 -->
+    <string name="import_dialog_title">가져오기 결과</string>
+    <string name="import_result_success">성공：%1$d개</string>
+    <string name="import_result_failed">실패：%1$d개</string>
+    <string name="import_failed_header">실패 사유：</string>
+    <string name="import_error_read">파일을 읽을 수 없습니다</string>
+    <string name="import_error_not_json_object">파일이 올바른 JSON 객체가 아닙니다</string>
+    <string name="import_error_too_large">파일이 너무 큽니다 (5 MB 제한 초과)</string>
+    <string name="import_error_exception">가져오기 오류：%1$s</string>
+    <string name="import_error_no_rules_array">JSON 형식 오류：rules 배열이 없습니다</string>
+    <string name="import_error_item_parse">%1$d번째 항목：파싱 실패</string>
+    <string name="import_error_item_exception">%1$d번째 항목：%2$s</string>
+    <string name="import_error_json_parse">JSON 파싱 실패：%1$s</string>
+
+    <!-- 규칙 목록 -->
+    <string name="rule_list_title">규칙 관리</string>
+    <string name="rule_empty">규칙이 없습니다. 먼저 규칙 JSON을 가져오세요</string>
+    <string name="rule_enabled">사용</string>
+    <string name="rule_disabled">사용 안 함</string>
+    <string name="delete_rule">삭제</string>
+    <string name="delete_rule_confirm">규칙 "%1$s"을(를) 삭제하시겠습니까?</string>
+    <string name="rule_unnamed">(이름 없는 규칙)</string>
+    <string name="rule_applies_all">모든 앱에 적용</string>
+    <string name="rule_priority">우선순위：%1$d</string>
+
+    <!-- 로그 목록 -->
+    <string name="log_list_title">건너뛰기 로그</string>
+    <string name="log_empty">로그가 없습니다</string>
+    <string name="log_success">✓ 성공</string>
+    <string name="log_failed">✗ 실패</string>
+    <string name="basic_recognition">기본 인식</string>
+
+    <!-- 규칙 녹화 도우미 -->
+    <string name="section_recorder">규칙 녹화 도우미</string>
+    <string name="recorder_desc">대상 페이지를 플로팅 창으로 스캔하여 건너뛰기 규칙을 자동 생성합니다</string>
+    <string name="start_recorder">녹화 도우미 시작</string>
+    <string name="recorder_permission_title">오버레이 권한 필요</string>
+    <string name="recorder_permission_msg">규칙 녹화 도우미는 플로팅 창을 표시해야 합니다. 설정에서 권한을 허용한 후 다시 시도하세요</string>
+    <string name="recorder_permission_grant">권한 허용</string>
+    <string name="recorder_started_toast">녹화 도우미가 시작되었습니다. 대상 앱으로 전환하세요</string>
+    <string name="recorder_title">규칙 녹화</string>
+    <string name="recorder_ready_short">준비됨</string>
+    <string name="recorder_ready">준비됨 — 대상 페이지로 이동한 후 스캔을 누르세요</string>
+    <string name="recorder_scan">페이지 스캔</string>
+    <string name="recorder_scanning">스캔 중...</string>
+    <string name="recorder_found_candidates">후보 %1$d개를 찾았습니다. 선택하세요</string>
+    <string name="recorder_need_service">먼저 접근성 서비스를 켜주세요</string>
+    <string name="candidate_score">%1$d점</string>
+    <string name="scan_reason_text">텍스트:"%1$s"</string>
+    <string name="scan_reason_desc">설명:"%1$s"</string>
+    <string name="scan_reason_id">ID:%1$s</string>
+    <string name="scan_reason_clickable">클릭 가능</string>
+    <string name="scan_reason_score">점수:%1$d</string>
+
+    <!-- 알림 -->
+    <string name="notif_title">치히로가 실행 중입니다</string>
+    <string name="notif_running">광고 건너뛰기 서비스가 작동 중입니다</string>
+    <string name="notif_channel_name">치히로 실행 상태</string>
+    <string name="notif_channel_desc">치히로 광고 건너뛰기 서비스의 실행 상태를 표시합니다</string>
+
+    <!-- 설정 패널 설명문 -->
+    <string name="test_mode_desc">대상 인식만 하고 클릭하지 않습니다</string>
+    <string name="coordinate_click_desc">규칙 파일에 좌표 정보가 포함되어 있어야 합니다</string>
+    <string name="restore_state_desc">서비스 재시작 후 마지막 스위치 상태를 복원합니다</string>
+
+    <!-- 규칙 미리보기 -->
+    <string name="rule_preview_title">규칙 미리보기</string>
+    <string name="rule_saved">규칙이 저장되었습니다</string>
+    <string name="save">저장</string>
+    <string name="none">없음</string>
+    <string name="preview_coord_relative">상대 좌표 (%1$.3f, %2$.3f)</string>
+    <string name="preview_coord_absolute">절대 좌표 (%1$d, %2$d)</string>
+    <string name="preview_match_text">텍스트 일치: %1$s\n</string>
+    <string name="preview_match_package">패키지 일치</string>
+    <string name="preview_alt_coord">대체: 상대 좌표 (%1$.3f, %2$.3f)</string>
+
+    <!-- 언어 -->
+    <string name="section_language">언어</string>
+    <string name="language_label">언어</string>
+    <string name="language_follow_system">시스템 설정 따르기</string>
+
+    <!-- 메인 화면 -->
+    <string name="main_badge">AD SKIP · 무료 오픈소스</string>
+    <string name="main_hint">버튼을 눌러 시작 화면 광고 차단을 시작하세요</string>
+    <string name="main_status_on">접근성 서비스 · 켜짐</string>
+    <string name="main_status_off">접근성 서비스 · 꺼짐</string>
+
+    <!-- 규칙 미리보기 라벨 -->
+    <string name="rule_name_label">규칙 이름</string>
+    <string name="rule_target_app_label">대상 앱</string>
+    <string name="rule_action_label">기본 동작</string>
+    <string name="rule_match_label">일치 조건</string>
+    <string name="rule_alt_action_label">대체 좌표 동작</string>
+    <string name="rule_name_hint">규칙 이름 입력</string>
+
+    <!-- 향상된 인식 (OCR) -->
+    <string name="section_ocr_enhance">향상된 인식</string>
+    <string name="ocr_enabled_label">OCR 폴백</string>
+    <string name="ocr_enabled_desc">접근성 트리에서 건너뛰기 버튼을 찾지 못하면 스크린샷에서 "건너뛰기/닫기"를 인식해 자동으로 탭합니다</string>
+    <string name="ocr_api_note">이 기기는 Android %1$d입니다. OCR 폴백에는 Android 11 (API 30) 이상이 필요합니다</string>
+    <string name="ocr_fallback_rule_name">OCR 폴백</string>
+    <string name="scan_reason_ocr">OCR: "%1$s"</string>
+    <string name="recorder_generate">규칙 생성</string>
+    <string name="recorder_no_selection">후보를 하나 이상 선택하세요</string>
+    <string name="recorder_selected_count">%1$d개 선택됨 — 탭하여 전환</string>
+
+    <!-- 정보 -->
+    <string name="section_about">정보</string>
+    <string name="about_version">버전</string>
+    <string name="github_releases">GitHub Releases (업데이트 확인)</string>
+    <string name="online_rule_library">온라인 규칙 라이브러리</string>
+    <string name="link_open_failed">링크를 열 수 없습니다</string>
+</resources>

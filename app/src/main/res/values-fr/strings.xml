@@ -1,0 +1,178 @@
+<resources>
+    <string name="app_name">Chihiro</string>
+    <string name="app_description">Un outil gratuit et open source qui bloque automatiquement les publicités au lancement des applications</string>
+    <string name="accessibility_description">En cas de dysfonctionnement du service d\'accessibilité, désactivez-le puis réactivez-le.</string>
+    <string name="attention">Remarques</string>
+    <string name="attention_content">Le service d\'accessibilité se désactive automatiquement à la fin du processus de l\'application. Autorisez donc l\'application à s\'exécuter en arrière-plan</string>
+    <string name="operation">Mode d\'emploi</string>
+    <string name="service_status_disable">Service d\'accessibilité désactivé~</string>
+    <string name="service_status_enable">Service d\'accessibilité activé</string>
+    <string name="service_is_enable_tips">Le service d\'accessibilité est déjà activé ! Pas besoin de le réactiver~</string>
+    <string name="open_target_app">Ouvrir l\'application cible</string>
+
+    <!-- Panneau de paramètres -->
+    <string name="panel_title">Paramètres</string>
+    <string name="section_service_status">État du service</string>
+    <string name="section_intercept_mode">Mode de blocage</string>
+    <string name="section_basic_recognition">Reconnaissance de base</string>
+    <string name="section_rule_management">Règles précises</string>
+    <string name="section_debug">Débogage</string>
+    <string name="section_log_stats">Statistiques des journaux</string>
+    <string name="section_safety">Paramètres de sécurité</string>
+
+    <string name="accessibility_status">Service d\'accessibilité :</string>
+    <string name="accessibility_on">Activé</string>
+    <string name="accessibility_off">Désactivé</string>
+    <string name="open_accessibility_settings">Ouvrir les paramètres d\'accessibilité</string>
+    <string name="intercept_status">État du blocage :</string>
+    <string name="intercept_running">En cours</string>
+    <string name="intercept_stopped">Arrêté</string>
+
+    <string name="mode_basic">Mode de base (mots-clés)</string>
+    <string name="mode_precise">Mode précis (règles uniquement)</string>
+    <string name="mode_mixed">Mode mixte (règles d\'abord, puis reconnaissance de base)</string>
+
+    <string name="enable_basic_skip">Activer la reconnaissance par mots-clés</string>
+    <string name="enable_precise_rule">Activer les règles précises</string>
+    <string name="enable_coordinate_click">Activer les clics par coordonnées</string>
+
+    <string name="import_rules">Importer les règles JSON</string>
+    <string name="export_rules">Exporter les règles JSON</string>
+    <string name="view_rules">Voir/gérer les règles</string>
+    <string name="rule_count">Règles chargées : %1$d</string>
+
+    <string name="test_mode">Mode test (reconnaissance seule, aucun clic)</string>
+    <string name="test_mode_toast">Mode test : reconnaissance seule, aucun clic</string>
+    <string name="current_package">Paquet actuel : %1$s</string>
+
+    <string name="today_skip_count">Passées aujourd\'hui : %1$d</string>
+    <string name="total_skip_count">Total passées : %1$d</string>
+    <string name="view_logs">Voir le journal des publicités passées</string>
+    <string name="clear_logs">Effacer le journal</string>
+    <string name="logs_cleared">Journal effacé</string>
+
+    <string name="cooldown_ms_label">Intervalle entre les clics (ms) :</string>
+    <string name="max_clicks_label">Clics maximum par minute :</string>
+    <string name="allow_restore_state">Restaurer le dernier état de blocage</string>
+    <string name="log_enabled">Enregistrer le journal des publicités passées</string>
+
+    <string name="import_success">%1$d importées avec succès, %2$d échecs</string>
+    <string name="export_success">Règles exportées</string>
+    <string name="export_failed">Échec de l\'exportation</string>
+    <string name="confirm_clear_logs">Effacer tout le journal ?</string>
+    <string name="cancel">Annuler</string>
+    <string name="confirm">Confirmer</string>
+
+    <!-- Boîte de dialogue du résultat d\'importation -->
+    <string name="import_dialog_title">Résultat de l\'importation</string>
+    <string name="import_result_success">Succès : %1$d</string>
+    <string name="import_result_failed">Échecs : %1$d</string>
+    <string name="import_failed_header">Raisons des échecs :</string>
+    <string name="import_error_read">Impossible de lire le fichier</string>
+    <string name="import_error_not_json_object">Le fichier n\'est pas un objet JSON valide</string>
+    <string name="import_error_too_large">Fichier trop volumineux (limite de 5 Mo dépassée)</string>
+    <string name="import_error_exception">Erreur d\'importation : %1$s</string>
+    <string name="import_error_no_rules_array">Erreur de format JSON : tableau « rules » manquant</string>
+    <string name="import_error_item_parse">Élément %1$d : analyse impossible</string>
+    <string name="import_error_item_exception">Élément %1$d : %2$s</string>
+    <string name="import_error_json_parse">Analyse JSON impossible : %1$s</string>
+
+    <!-- Liste des règles -->
+    <string name="rule_list_title">Gestion des règles</string>
+    <string name="rule_empty">Aucune règle. Importez d\'abord un JSON de règles</string>
+    <string name="rule_enabled">Activée</string>
+    <string name="rule_disabled">Désactivée</string>
+    <string name="delete_rule">Supprimer</string>
+    <string name="delete_rule_confirm">Supprimer la règle « %1$s » ?</string>
+    <string name="rule_unnamed">(Règle sans nom)</string>
+    <string name="rule_applies_all">S\'applique à toutes les applications</string>
+    <string name="rule_priority">Priorité : %1$d</string>
+
+    <!-- Journal -->
+    <string name="log_list_title">Journal des publicités passées</string>
+    <string name="log_empty">Aucun journal</string>
+    <string name="log_success">✓ Succès</string>
+    <string name="log_failed">✗ Échec</string>
+    <string name="basic_recognition">Reconnaissance de base</string>
+
+    <!-- Enregistreur de règles -->
+    <string name="section_recorder">Enregistreur de règles</string>
+    <string name="recorder_desc">Scanne la page cible avec une fenêtre flottante et génère automatiquement des règles</string>
+    <string name="start_recorder">Démarrer l\'enregistreur</string>
+    <string name="recorder_permission_title">Autorisation de superposition requise</string>
+    <string name="recorder_permission_msg">L\'enregistreur de règles doit afficher une fenêtre flottante. Autorisez-le dans les paramètres puis réessayez</string>
+    <string name="recorder_permission_grant">Autoriser</string>
+    <string name="recorder_started_toast">Enregistreur démarré. Basculez vers l\'application cible</string>
+    <string name="recorder_title">Enregistrement de règles</string>
+    <string name="recorder_ready_short">Prêt</string>
+    <string name="recorder_ready">Prêt — accédez à la page cible puis touchez « Scanner »</string>
+    <string name="recorder_scan">Scanner la page</string>
+    <string name="recorder_scanning">Analyse en cours...</string>
+    <string name="recorder_found_candidates">%1$d candidats trouvés, sélectionnez-en un</string>
+    <string name="recorder_need_service">Activez d\'abord le service d\'accessibilité</string>
+    <string name="candidate_score">%1$d pts</string>
+    <string name="scan_reason_text">Texte : « %1$s »</string>
+    <string name="scan_reason_desc">Description : « %1$s »</string>
+    <string name="scan_reason_id">ID : %1$s</string>
+    <string name="scan_reason_clickable">Cliquable</string>
+    <string name="scan_reason_score">Score : %1$d</string>
+
+    <!-- Notification -->
+    <string name="notif_title">Chihiro est en cours d\'exécution</string>
+    <string name="notif_running">Le service de blocage des publicités est en marche</string>
+    <string name="notif_channel_name">État d\'exécution de Chihiro</string>
+    <string name="notif_channel_desc">Affiche l\'état d\'exécution du service de blocage des publicités Chihiro</string>
+
+    <!-- Descriptions du panneau de paramètres -->
+    <string name="test_mode_desc">Reconnaît les cibles sans exécuter de clics</string>
+    <string name="coordinate_click_desc">Le fichier de règles doit contenir des coordonnées</string>
+    <string name="restore_state_desc">Restaure le dernier état après redémarrage du service</string>
+
+    <!-- Aperçu de la règle -->
+    <string name="rule_preview_title">Aperçu de la règle</string>
+    <string name="rule_saved">Règle enregistrée</string>
+    <string name="save">Enregistrer</string>
+    <string name="none">Aucun</string>
+    <string name="preview_coord_relative">Coordonnées relatives (%1$.3f, %2$.3f)</string>
+    <string name="preview_coord_absolute">Coordonnées absolues (%1$d, %2$d)</string>
+    <string name="preview_match_text">Correspondance de texte : %1$s\n</string>
+    <string name="preview_match_package">Correspondance de paquet</string>
+    <string name="preview_alt_coord">Secours : coordonnées relatives (%1$.3f, %2$.3f)</string>
+
+    <!-- Langue -->
+    <string name="section_language">Langue</string>
+    <string name="language_label">Langue</string>
+    <string name="language_follow_system">Suivre le système</string>
+
+    <!-- Écran principal -->
+    <string name="main_badge">AD SKIP · GRATUIT ET OPEN SOURCE</string>
+    <string name="main_hint">Touchez le bouton pour commencer à bloquer les publicités</string>
+    <string name="main_status_on">Service d\'accessibilité · Activé</string>
+    <string name="main_status_off">Service d\'accessibilité · Désactivé</string>
+
+    <!-- Libellés de l\'aperçu de règle -->
+    <string name="rule_name_label">Nom de la règle</string>
+    <string name="rule_target_app_label">Application cible</string>
+    <string name="rule_action_label">Action principale</string>
+    <string name="rule_match_label">Conditions de correspondance</string>
+    <string name="rule_alt_action_label">Actions de coordonnées de secours</string>
+    <string name="rule_name_hint">Saisir le nom de la règle</string>
+
+    <!-- Reconnaissance avancée (OCR) -->
+    <string name="section_ocr_enhance">Reconnaissance avancée</string>
+    <string name="ocr_enabled_label">Secours OCR</string>
+    <string name="ocr_enabled_desc">Si l\'arbre d\'accessibilité ne trouve aucun bouton, reconnaît « passer/fermer » sur une capture d\'écran et tape dessus</string>
+    <string name="ocr_api_note">Cet appareil exécute Android %1$d ; le secours OCR nécessite Android 11 (API 30) ou plus récent</string>
+    <string name="ocr_fallback_rule_name">Secours OCR</string>
+    <string name="scan_reason_ocr">OCR : « %1$s »</string>
+    <string name="recorder_generate">Générer la règle</string>
+    <string name="recorder_no_selection">Sélectionnez d\'abord au moins un candidat</string>
+    <string name="recorder_selected_count">%1$d sélectionné(s) — touchez pour basculer</string>
+
+    <!-- À propos -->
+    <string name="section_about">À propos</string>
+    <string name="about_version">Version</string>
+    <string name="github_releases">GitHub Releases (vérifier les mises à jour)</string>
+    <string name="online_rule_library">Bibliothèque de règles en ligne</string>
+    <string name="link_open_failed">Impossible d\'ouvrir le lien</string>
+</resources>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 设置面板暗色模式 -->
+    <color name="panel_background">#FF12141F</color>
+    <color name="card_background">#FF1E2235</color>
+    <color name="text_primary">#FFF5F7FA</color>
+    <color name="text_secondary">#FF9BA3BF</color>
+    <color name="section_header">#FF9BA3BF</color>
+    <color name="divider">#FF252838</color>
+
+    <!-- 暗色模式下 off 状态用灰色，黑底可见 -->
+    <color name="status_off">#FFB0B0B0</color>
+
+    <!-- 控件 -->
+    <color name="drag_handle">#FF3A3D52</color>
+
+    <!-- 状态胶囊 tint（夜间 off 用浅灰） -->
+    <color name="pill_bg_off">#1AFFFFFF</color>
+
+    <!-- M3 容器色（夜间） -->
+    <color name="colorPrimaryContainer">#FF4A45C4</color>
+    <color name="colorOnPrimaryContainer">#FFE6E4FF</color>
+</resources>

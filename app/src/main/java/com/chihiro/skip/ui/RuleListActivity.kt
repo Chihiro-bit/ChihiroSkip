@@ -1,5 +1,6 @@
 package com.chihiro.skip.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -9,10 +10,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chihiro.skip.R
+import com.chihiro.skip.manager.LanguageHelper
 import com.chihiro.skip.model.AdSkipRule
 import com.chihiro.skip.repository.RuleRepository
 import com.google.android.material.appbar.MaterialToolbar
@@ -24,6 +25,10 @@ class RuleListActivity : AppCompatActivity() {
     private lateinit var adapter: RuleAdapter
     private lateinit var rvRules: RecyclerView
     private lateinit var tvEmpty: TextView
+
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LanguageHelper.wrap(newBase))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,7 +61,6 @@ class RuleListActivity : AppCompatActivity() {
             }
         )
         rvRules.layoutManager = LinearLayoutManager(this)
-        rvRules.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
         rvRules.adapter = adapter
         refreshList()
     }
@@ -94,9 +98,9 @@ class RuleListActivity : AppCompatActivity() {
 
         override fun onBindViewHolder(h: VH, pos: Int) {
             val rule = items[pos]
-            h.tvName.text = rule.name.ifEmpty { "(未命名规则)" }
-            h.tvPackage.text = rule.packageName.ifEmpty { "适用于所有 App" }
-            h.tvPriority.text = "优先级：${rule.priority}"
+            h.tvName.text = rule.name.ifEmpty { h.itemView.context.getString(R.string.rule_unnamed) }
+            h.tvPackage.text = rule.packageName.ifEmpty { h.itemView.context.getString(R.string.rule_applies_all) }
+            h.tvPriority.text = h.itemView.context.getString(R.string.rule_priority, rule.priority)
             h.swEnabled.isChecked = rule.enabled
             h.swEnabled.setOnCheckedChangeListener { _, checked ->
                 onToggle(rule, checked)

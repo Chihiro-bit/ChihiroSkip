@@ -1,0 +1,178 @@
+<resources>
+    <string name="app_name">千尋</string>
+    <string name="app_description">アプリの開幕広告を自動でスキップする無料のオープンソースツール</string>
+    <string name="accessibility_description">アクセシビリティサービスに不具合が発生した場合は、オフにしてから再度オンにしてください。</string>
+    <string name="attention">注意事項</string>
+    <string name="attention_content">アクセシビリティサービスはアプリのプロセス終了後に自動的にオフになるため、アプリのバックグラウンド実行を許可してください</string>
+    <string name="operation">操作方法</string>
+    <string name="service_status_disable">アクセシビリティサービスはオフになっています~</string>
+    <string name="service_status_enable">アクセシビリティサービスはオンになっています</string>
+    <string name="service_is_enable_tips">アクセシビリティサービスはすでにオンです！再度オンにする必要はありません~</string>
+    <string name="open_target_app">対象アプリを開く</string>
+
+    <!-- 設定パネル -->
+    <string name="panel_title">設定</string>
+    <string name="section_service_status">サービス状態</string>
+    <string name="section_intercept_mode">ブロックモード</string>
+    <string name="section_basic_recognition">基本認識</string>
+    <string name="section_rule_management">詳細ルール</string>
+    <string name="section_debug">デバッグ</string>
+    <string name="section_log_stats">ログ統計</string>
+    <string name="section_safety">安全設定</string>
+
+    <string name="accessibility_status">アクセシビリティサービス：</string>
+    <string name="accessibility_on">オン</string>
+    <string name="accessibility_off">オフ</string>
+    <string name="open_accessibility_settings">アクセシビリティ設定を開く</string>
+    <string name="intercept_status">ブロック状態：</string>
+    <string name="intercept_running">実行中</string>
+    <string name="intercept_stopped">停止中</string>
+
+    <string name="mode_basic">基本モード（キーワード認識）</string>
+    <string name="mode_precise">詳細モード（ルールのみ）</string>
+    <string name="mode_mixed">混合モード（ルール優先、失敗時は基本認識）</string>
+
+    <string name="enable_basic_skip">基本キーワード認識を有効にする</string>
+    <string name="enable_precise_rule">詳細ルールを有効にする</string>
+    <string name="enable_coordinate_click">座標クリックを有効にする</string>
+
+    <string name="import_rules">ルール JSON をインポート</string>
+    <string name="export_rules">ルール JSON をエクスポート</string>
+    <string name="view_rules">ルールを表示・管理</string>
+    <string name="rule_count">読み込み済みルール：%1$d 件</string>
+
+    <string name="test_mode">テストモード（認識のみ、クリックしない）</string>
+    <string name="test_mode_toast">テストモード：認識のみ、クリックしません</string>
+    <string name="current_package">現在のパッケージ：%1$s</string>
+
+    <string name="today_skip_count">今日スキップ：%1$d 回</string>
+    <string name="total_skip_count">累計スキップ：%1$d 回</string>
+    <string name="view_logs">スキップログを表示</string>
+    <string name="clear_logs">ログを消去</string>
+    <string name="logs_cleared">ログを消去しました</string>
+
+    <string name="cooldown_ms_label">クリック間隔（ミリ秒）：</string>
+    <string name="max_clicks_label">1分あたりの最大クリック数：</string>
+    <string name="allow_restore_state">前回のブロック状態を復元</string>
+    <string name="log_enabled">スキップログを記録</string>
+
+    <string name="import_success">%1$d 件インポート成功、%2$d 件失敗</string>
+    <string name="export_success">ルールをエクスポートしました</string>
+    <string name="export_failed">エクスポートに失敗しました</string>
+    <string name="confirm_clear_logs">すべてのログを消去しますか？</string>
+    <string name="cancel">キャンセル</string>
+    <string name="confirm">確認</string>
+
+    <!-- インポート結果ダイアログ -->
+    <string name="import_dialog_title">インポート結果</string>
+    <string name="import_result_success">成功：%1$d 件</string>
+    <string name="import_result_failed">失敗：%1$d 件</string>
+    <string name="import_failed_header">失敗理由：</string>
+    <string name="import_error_read">ファイルを読み取れません</string>
+    <string name="import_error_not_json_object">ファイルが有効な JSON オブジェクトではありません</string>
+    <string name="import_error_too_large">ファイルが大きすぎます（5 MB 制限を超過）</string>
+    <string name="import_error_exception">インポートエラー：%1$s</string>
+    <string name="import_error_no_rules_array">JSON 形式エラー：rules 配列がありません</string>
+    <string name="import_error_item_parse">%1$d 件目：解析に失敗</string>
+    <string name="import_error_item_exception">%1$d 件目：%2$s</string>
+    <string name="import_error_json_parse">JSON 解析に失敗：%1$s</string>
+
+    <!-- ルール一覧 -->
+    <string name="rule_list_title">ルール管理</string>
+    <string name="rule_empty">ルールがありません。まずルール JSON をインポートしてください</string>
+    <string name="rule_enabled">有効</string>
+    <string name="rule_disabled">無効</string>
+    <string name="delete_rule">削除</string>
+    <string name="delete_rule_confirm">ルール「%1$s」を削除しますか？</string>
+    <string name="rule_unnamed">(名前なしルール)</string>
+    <string name="rule_applies_all">すべてのアプリに適用</string>
+    <string name="rule_priority">優先度：%1$d</string>
+
+    <!-- ログ一覧 -->
+    <string name="log_list_title">スキップログ</string>
+    <string name="log_empty">ログはまだありません</string>
+    <string name="log_success">✓ 成功</string>
+    <string name="log_failed">✗ 失敗</string>
+    <string name="basic_recognition">基本認識</string>
+
+    <!-- ルール録画アシスタント -->
+    <string name="section_recorder">ルール録画アシスタント</string>
+    <string name="recorder_desc">対象ページをフローティングウィンドウでスキャンし、スキップルールを自動生成</string>
+    <string name="start_recorder">録画アシスタントを起動</string>
+    <string name="recorder_permission_title">フローティングウィンドウの権限が必要です</string>
+    <string name="recorder_permission_msg">ルール録画アシスタントはフローティングウィンドウの表示が必要です。設定で許可してから再試行してください</string>
+    <string name="recorder_permission_grant">許可する</string>
+    <string name="recorder_started_toast">録画アシスタントを起動しました。対象アプリに切り替えてください</string>
+    <string name="recorder_title">ルール録画</string>
+    <string name="recorder_ready_short">準備完了</string>
+    <string name="recorder_ready">準備完了 — 対象ページへ移動してからスキャンをタップ</string>
+    <string name="recorder_scan">ページをスキャン</string>
+    <string name="recorder_scanning">スキャン中...</string>
+    <string name="recorder_found_candidates">%1$d 件の候補が見つかりました。選択してください</string>
+    <string name="recorder_need_service">先にアクセシビリティサービスをオンにしてください</string>
+    <string name="candidate_score">%1$d点</string>
+    <string name="scan_reason_text">テキスト:"%1$s"</string>
+    <string name="scan_reason_desc">説明:"%1$s"</string>
+    <string name="scan_reason_id">ID:%1$s</string>
+    <string name="scan_reason_clickable">クリック可能</string>
+    <string name="scan_reason_score">スコア:%1$d</string>
+
+    <!-- 通知 -->
+    <string name="notif_title">千尋は実行中です</string>
+    <string name="notif_running">広告スキップサービスが動作しています</string>
+    <string name="notif_channel_name">千尋の実行状態</string>
+    <string name="notif_channel_desc">千尋広告スキップサービスの実行状態を表示します</string>
+
+    <!-- 設定パネルの説明文 -->
+    <string name="test_mode_desc">対象の認識のみでクリックは実行しません</string>
+    <string name="coordinate_click_desc">ルールファイルに座標情報が含まれている必要があります</string>
+    <string name="restore_state_desc">サービス再起動後に前回のスイッチ状態を復元します</string>
+
+    <!-- ルールプレビュー -->
+    <string name="rule_preview_title">ルールプレビュー</string>
+    <string name="rule_saved">ルールを保存しました</string>
+    <string name="save">保存</string>
+    <string name="none">なし</string>
+    <string name="preview_coord_relative">相対座標 (%1$.3f, %2$.3f)</string>
+    <string name="preview_coord_absolute">絶対座標 (%1$d, %2$d)</string>
+    <string name="preview_match_text">テキスト一致: %1$s\n</string>
+    <string name="preview_match_package">パッケージ一致</string>
+    <string name="preview_alt_coord">予備: 相対座標 (%1$.3f, %2$.3f)</string>
+
+    <!-- 言語 -->
+    <string name="section_language">言語</string>
+    <string name="language_label">言語</string>
+    <string name="language_follow_system">システムに従う</string>
+
+    <!-- メイン画面 -->
+    <string name="main_badge">AD SKIP · 無料オープンソース</string>
+    <string name="main_hint">ボタンをタップして開幕広告のブロックを開始</string>
+    <string name="main_status_on">アクセシビリティサービス · オン</string>
+    <string name="main_status_off">アクセシビリティサービス · オフ</string>
+
+    <!-- ルールプレビューラベル -->
+    <string name="rule_name_label">ルール名</string>
+    <string name="rule_target_app_label">対象アプリ</string>
+    <string name="rule_action_label">メインアクション</string>
+    <string name="rule_match_label">一致条件</string>
+    <string name="rule_alt_action_label">予備の座標アクション</string>
+    <string name="rule_name_hint">ルール名を入力</string>
+
+    <!-- 拡張認識（OCR） -->
+    <string name="section_ocr_enhance">拡張認識</string>
+    <string name="ocr_enabled_label">OCR フォールバック</string>
+    <string name="ocr_enabled_desc">アクセシビリティツリーでスキップボタンが見つからない場合、スクリーンショットから「スキップ/閉じる」を認識して自動タップします</string>
+    <string name="ocr_api_note">この端末は Android %1$d です。OCR フォールバックには Android 11（API 30）以上が必要です</string>
+    <string name="ocr_fallback_rule_name">OCR フォールバック</string>
+    <string name="scan_reason_ocr">OCR:「%1$s」</string>
+    <string name="recorder_generate">ルールを生成</string>
+    <string name="recorder_no_selection">候補を少なくとも1つ選択してください</string>
+    <string name="recorder_selected_count">%1$d 件選択中 — タップで切り替え</string>
+
+    <!-- このアプリについて -->
+    <string name="section_about">このアプリについて</string>
+    <string name="about_version">バージョン</string>
+    <string name="github_releases">GitHub Releases（更新を確認）</string>
+    <string name="online_rule_library">オンラインルールライブラリ</string>
+    <string name="link_open_failed">リンクを開けません</string>
+</resources>

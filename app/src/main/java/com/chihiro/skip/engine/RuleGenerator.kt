@@ -9,13 +9,16 @@ import com.chihiro.skip.model.RuleAction
 class RuleGenerator {
 
     fun generateRule(session: RecordingSession): AdSkipRule? {
-        val node = session.selectedNode ?: return null
+        val nodes = session.selectedNodes
+        if (nodes.isEmpty()) return null
+        val primary = nodes.first()
         return AdSkipRule(
-            name = buildRuleName(node, session),
+            name = buildRuleName(primary, session),
             packageName = session.packageName,
-            matchCondition = buildMatchCondition(session, node),
-            action = buildPrimaryAction(node),
-            relativeAction = buildRelativeAction(node, session),
+            matchCondition = buildMatchCondition(session, primary),
+            action = buildPrimaryAction(primary),
+            relativeAction = buildRelativeAction(primary, session),
+            candidateActions = nodes.map { buildPrimaryAction(it) },
             allowCoordinateClick = session.isCoordinateCapture,
             recordedScreenWidth = session.screenWidth,
             recordedScreenHeight = session.screenHeight,
@@ -25,6 +28,11 @@ class RuleGenerator {
     }
 
     private fun buildPrimaryAction(node: CandidateNode): RuleAction = when {
+        // OCR 节点不在无障碍树里，clickNode 永远点不到 → 强制坐标动作
+        node.isFromOcr -> RuleAction(
+            type = "clickRelativeCoordinate", clickBy = "relativeCoordinate",
+            xRatio = node.xRatio, yRatio = node.yRatio
+        )
         node.viewId.isNotEmpty() -> RuleAction(
             type = "clickNode", clickBy = "viewId", value = node.viewId
         )
@@ -50,7 +58,8 @@ class RuleGenerator {
     }
 
     private fun buildMatchCondition(session: RecordingSession, node: CandidateNode): MatchCondition {
-        val textList = if (node.text.isNotEmpty()) listOf(node.text) else emptyList()
+        // OCR 文本与无障碍树无关，textEquals 只会造成假匹配
+        val textList = if (!node.isFromOcr && node.text.isNotEmpty()) listOf(node.text) else emptyList()
         return MatchCondition(
             activityName = session.activityName,
             textEquals = textList,

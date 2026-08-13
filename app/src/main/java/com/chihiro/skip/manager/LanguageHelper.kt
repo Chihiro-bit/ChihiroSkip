@@ -1,73 +1,37 @@
 package com.chihiro.skip.manager
 
-import android.annotation.TargetApi
+import android.app.Activity
 import android.content.Context
-import android.os.Build
+import android.content.res.Configuration
 import android.os.LocaleList
-import java.util.*
+import com.chihiro.skip.repository.SettingsRepository
 
+/**
+ * 应用内语言切换工具：语言选择持久化在 SettingsRepository。
+ * 各 Activity/Service 在 attachBaseContext 中调用 [wrap] 应用所选语言；
+ * 切换语言时调用 [applyLanguage]（Activity 会自动 recreate 生效）。
+ */
 object LanguageHelper {
 
-    fun getAttachBaseContext(context: Context): Context {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            return setAppLanguageApi24(context)
-        } else {
-            setAppLanguage(context)
-        }
-        return context
+    /** 支持的语言标签，空串 = 跟随系统 */
+    val SUPPORTED_TAGS = listOf("", "zh", "en", "ja", "ko", "fr")
+
+    /** 返回应用了所选语言的上下文；跟随系统时原样返回 */
+    fun wrap(base: Context): Context {
+        val tag = SettingsRepository.getInstance(base).languageTag
+        if (tag.isEmpty()) return base
+        val config = Configuration(base.resources.configuration)
+        config.setLocales(LocaleList.forLanguageTags(tag))
+        return base.createConfigurationContext(config)
     }
 
-    /**
-     * 获取当前系统语言，如未包含则默认英文
-     * Locale类包含语言、国家等属性
-     */
-    private fun getSystemLocale(): Locale {
-
-        val systemLocale = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            LocaleList.getDefault()[0]
-        } else {
-            Locale.getDefault()
-        }
-        return when (systemLocale.language) {
-            Locale.CHINA.language -> {
-                Locale.CHINA
-            }
-            Locale.ENGLISH.language -> {
-                Locale.ENGLISH
-            }
-            else -> {
-                Locale.ENGLISH
-            }
-        }
+    /** 保存语言选择；若在 Activity 中调用则立即重建生效 */
+    fun applyLanguage(context: Context, tag: String) {
+        SettingsRepository.getInstance(context).languageTag = tag
+        (context as? Activity)?.recreate()
     }
 
-    /**
-     * 兼容 7.0 及以上
-     */
-    @TargetApi(Build.VERSION_CODES.N)
-    private fun setAppLanguageApi24(context: Context): Context {
-        val locale = getSystemLocale()
-        val resource = context.resources
-        val configuration = resource.configuration
-        configuration.setLocale(locale)
-        configuration.setLocales(LocaleList(locale))
-        return context.createConfigurationContext(configuration)
-    }
-
-    /**
-     * 设置应用语言
-     */
-    private fun setAppLanguage(context: Context) {
-        val resources = context.resources
-        val displayMetrics = resources.displayMetrics
-        val configuration = resources.configuration
-        // 获取当前系统语言，默认设置跟随系统
-        val locale = getSystemLocale()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            configuration.setLocale(locale)
-        } else {
-            configuration.locale = locale
-        }
-        resources.updateConfiguration(configuration, displayMetrics)
-    }
+    /** 当前语言标签（空串 = 跟随系统） */
+    fun currentTag(context: Context): String =
+        SettingsRepository.getInstance(context).languageTag
 }

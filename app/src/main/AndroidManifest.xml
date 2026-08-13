@@ -5,6 +5,15 @@
 
     <uses-permission android:name="android.permission.BIND_ACCESSIBILITY_SERVICE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- ML Kit 依赖库会通过合并带入网络权限；本应用设计上不允许联网（无障碍服务），显式移除 -->
+    <uses-permission
+        android:name="android.permission.INTERNET"
+        tools:node="remove" />
+    <uses-permission
+        android:name="android.permission.ACCESS_NETWORK_STATE"
+        tools:node="remove" />
 
     <application
         android:allowBackup="true"
@@ -46,21 +55,6 @@
         <service
             android:name=".service.FloatingRecorderService"
             android:exported="false" />
-<!--        <service-->
-<!--            android:name=".service.AccessibilityService"-->
-<!--            android:enabled="true"-->
-<!--            android:exported="true"-->
-<!--            android:label="@string/accessibility_description"-->
-<!--            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"-->
-<!--            android:process=":BackgroundService">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.accessibilityservice.AccessibilityService" />-->
-<!--            </intent-filter>-->
-<!--            &lt;!&ndash; 通过xml文件完成辅助功能相关配置，也可以在onServiceConnected中动态配置 &ndash;&gt;-->
-<!--            <meta-data-->
-<!--                android:name="android.accessibilityservice"-->
-<!--                android:resource="@xml/accessibility" />-->
-<!--        </service>-->
 
         <service
             android:name=".service.MyAccessibilityService"

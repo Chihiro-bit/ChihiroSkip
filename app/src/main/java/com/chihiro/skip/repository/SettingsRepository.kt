@@ -20,9 +20,11 @@ class SettingsRepository private constructor(context: Context) {
         private const val KEY_ENABLE_BASIC = "enable_basic_skip"
         private const val KEY_ENABLE_PRECISE = "enable_precise_rule"
         private const val KEY_ENABLE_COORDINATE = "enable_coordinate_click"
+        private const val KEY_OCR_ENABLED = "ocr_enabled"
         private const val KEY_TOTAL_SKIP_COUNT = "total_skip_count"
         private const val KEY_TODAY_SKIP_COUNT = "today_skip_count"
         private const val KEY_TODAY_DATE = "today_date"
+        private const val KEY_LANGUAGE_TAG = "language_tag"
 
         @Volatile
         private var INSTANCE: SettingsRepository? = null
@@ -32,6 +34,11 @@ class SettingsRepository private constructor(context: Context) {
                 INSTANCE ?: SettingsRepository(context.applicationContext).also { INSTANCE = it }
             }
     }
+
+    // ── 语言（空串 = 跟随系统）───────────────────────────────
+    var languageTag: String
+        get() = prefs.getString(KEY_LANGUAGE_TAG, "") ?: ""
+        set(v) = prefs.edit().putString(KEY_LANGUAGE_TAG, v).apply()
 
     // ── 主开关 ──────────────────────────────────────────────
     var interceptEnabled: Boolean
@@ -78,11 +85,17 @@ class SettingsRepository private constructor(context: Context) {
         get() = prefs.getBoolean(KEY_ENABLE_COORDINATE, false)
         set(v) = prefs.edit().putBoolean(KEY_ENABLE_COORDINATE, v).apply()
 
+    // ── OCR 兜底识别（默认关；需同时开启"启用坐标点击"）─────────
+    var ocrEnabled: Boolean
+        get() = prefs.getBoolean(KEY_OCR_ENABLED, false)
+        set(v) = prefs.edit().putBoolean(KEY_OCR_ENABLED, v).apply()
+
     // ── 统计 ─────────────────────────────────────────────────
     var totalSkipCount: Int
         get() = prefs.getInt(KEY_TOTAL_SKIP_COUNT, 0)
         set(v) = prefs.edit().putInt(KEY_TOTAL_SKIP_COUNT, v).apply()
 
+    @Synchronized
     fun incrementTotalSkipCount() { totalSkipCount += 1 }
 
     fun getTodaySkipCount(): Int {
@@ -90,6 +103,7 @@ class SettingsRepository private constructor(context: Context) {
         return prefs.getInt(KEY_TODAY_SKIP_COUNT, 0)
     }
 
+    @Synchronized
     fun incrementTodaySkipCount() {
         ensureTodayKey()
         prefs.edit().putInt(KEY_TODAY_SKIP_COUNT, getTodaySkipCount() + 1).apply()
